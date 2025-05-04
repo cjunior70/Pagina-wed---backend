@@ -1,4 +1,5 @@
-﻿using ENTITY;
+﻿using Modelos;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace DAL
             using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UNA_EMPRESA", ora))
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
+                /*
                 cmd.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_la_empresa.nombre_de_la_empresa;
                 cmd.Parameters.Add("p_Descripcion_De_la_empresa", OracleDbType.Varchar2).Value = datos_de_la_empresa.descripcion_de_la_empresa;
                 cmd.Parameters.Add("p_whatsapp", OracleDbType.Varchar2).Value = datos_de_la_empresa.whatsapp;
@@ -78,7 +79,7 @@ namespace DAL
                 cmd.Parameters.Add("P_ubicacion_codigo", OracleDbType.Int64).Value = datos_de_la_empresa.ubicaion.codigo;
 
                 Console.WriteLine("codigo del dueño " + datos_de_la_empresa.usuario.codigo);
-
+                */
                 cmd.ExecuteNonQuery();
             }
 
@@ -159,7 +160,7 @@ namespace DAL
             //Comando para poder buscar el procedimiento en la base de datod y enviar los datos
             OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_EMPRESA", ora);
             comando.CommandType = System.Data.CommandType.StoredProcedure;
-
+            /*
             comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.codigo;
             comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.nombre_de_la_empresa;
             comando.Parameters.Add("p_Descripcion_De_la_empresa", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.descripcion_de_la_empresa;
@@ -172,7 +173,7 @@ namespace DAL
             comando.Parameters.Add("p_imagen_general", OracleDbType.Blob).Value = datos_de_empresa_actualizados.imagen_general;
             comando.Parameters.Add("p_usuario_codigo", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.usuario.codigo;
             comando.Parameters.Add("P_ubicacion_codigo", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.ubicaion.codigo;
-
+            */
             comando.ExecuteNonQuery();
 
         }

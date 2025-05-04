@@ -1,4 +1,4 @@
-﻿using ENTITY;
+﻿using Modelos;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+
+namespace Data
 {
     public class Funcion_de_los_servicios
     {
@@ -64,8 +65,8 @@ namespace DAL
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_servicio.nombre_del_servicio;
-                cmd.Parameters.Add("p_precio", OracleDbType.Int16).Value = datos_de_servicio.precio;
+                //cmd.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_servicio.nombre_del_servicio;
+                //cmd.Parameters.Add("p_precio", OracleDbType.Int16).Value = datos_de_servicio.precio;
 
                 //El tiempo toca descomponarlo en string para poder guardarlo como se debe
                 cmd.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_de_servicio.tiempo_promedio;
@@ -150,10 +151,10 @@ namespace DAL
             OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_SERVICIO", ora);
             comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int16).Value = datos_del_servicio.codigo;
-            comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_del_servicio.nombre_del_servicio;
-            comando.Parameters.Add("p_precio", OracleDbType.Double).Value = datos_del_servicio.precio;
-            comando.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_del_servicio.tiempo_promedio;
+            //.Parameters.Add("p_codigo", OracleDbType.Int16).Value = datos_del_servicio.codigo;
+            //comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_del_servicio.nombre_del_servicio;
+            //comando.Parameters.Add("p_precio", OracleDbType.Double).Value = datos_del_servicio.precio;
+            //comando.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_del_servicio.tiempo_promedio;
 
             comando.ExecuteNonQuery();
 

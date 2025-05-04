@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DAL
+namespace Data
 {
     public class Funciones_de_la_reservacion
     {
