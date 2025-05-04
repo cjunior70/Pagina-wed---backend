@@ -1,5 +1,4 @@
-﻿using Modelos;
-using Modules;
+﻿using Modules;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+namespace DDataAL
 {
     public class Funciones_de_Empresa
     {

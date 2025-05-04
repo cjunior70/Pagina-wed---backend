@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DAL
+namespace Data
 {
     public class Funciones_para_agregar_un_empleado_a_una_reservacion
     {
@@ -26,51 +26,51 @@ namespace DAL
         }
 
         //Funcion para poder regirtar un empleado a una reservacion
-        public Boolean Ingresar_Un_Empleado_a_una_Reservacion(Datos_login Conexion_del_cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
+        //public Boolean Ingresar_Un_Empleado_a_una_Reservacion(Datos_login Conexion_del_cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
 
-            try
-            {
+        //    try
+        //    {
 
-                conexion(Conexion_del_cliente);
+        //        conexion(Conexion_del_cliente);
 
-                //Abirir conexion
-                ora.Open();
-
-
-                Enviar_Datos(datos_del_empleado_en_la_reservacion);
+        //        //Abirir conexion
+        //        ora.Open();
 
 
-                //Cerrar conexion
-                ora.Close();
-                return true;
+        //        Enviar_Datos(datos_del_empleado_en_la_reservacion);
 
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
 
-                return false;
-            }
+        //        //Cerrar conexion
+        //        ora.Close();
+        //        return true;
 
-        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
 
-        //Funcion privada para registrar los datos de un empleado a una reservacion
-        private void Enviar_Datos(Empleados_de_una_reservacion datos_del_empleado_a_la_reservacion)
-        {
-            //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_REGISTRAR_UN_EMPLEADO_A_UNA_RESERVACION", ora))
-            {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //        return false;
+        //    }
 
-                cmd.Parameters.Add("p_codigo_reservacion", OracleDbType.Varchar2).Value = datos_del_empleado_a_la_reservacion.codigo_de_reservacion;
-                cmd.Parameters.Add("p_empleado_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_a_la_reservacion.codigo_de_empleado;
+        //}
 
-                cmd.ExecuteNonQuery();
-            }
+        ////Funcion privada para registrar los datos de un empleado a una reservacion
+        //private void Enviar_Datos(Empleados_de_una_reservacion datos_del_empleado_a_la_reservacion)
+        //{
+        //    //Intancia para poder entrar a la funcion
+        //    using (OracleCommand cmd = new OracleCommand("PK_REGISTRAR_UN_EMPLEADO_A_UNA_RESERVACION", ora))
+        //    {
+        //        cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-        }
+        //        cmd.Parameters.Add("p_codigo_reservacion", OracleDbType.Varchar2).Value = datos_del_empleado_a_la_reservacion.codigo_de_reservacion;
+        //        cmd.Parameters.Add("p_empleado_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_a_la_reservacion.codigo_de_empleado;
+
+        //        cmd.ExecuteNonQuery();
+        //    }
+
+        //}
 
         //Variable para poder guarda el listado de los empleados de un servicio
         DataTable Tabla_de_los_empleado_de_un_servicio = new DataTable();
@@ -112,132 +112,132 @@ namespace DAL
         }
 
 
-        //Funcion para poder modificar los datos de los empleados de una reservacion
-        public Boolean Modificar_datos_de_un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
-            try
-            {
-                //Funcion para hacer la conexion con la base de datos
-                conexion(Conexion_del_Cliente);
+        ////Funcion para poder modificar los datos de los empleados de una reservacion
+        //public Boolean Modificar_datos_de_un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
+        //    try
+        //    {
+        //        //Funcion para hacer la conexion con la base de datos
+        //        conexion(Conexion_del_Cliente);
 
-                //Abrir la conexion con la base
-                ora.Open();
+        //        //Abrir la conexion con la base
+        //        ora.Open();
 
-                //Funcion para enviar los datos nuevos a la base
-                Enviar_actualizacion(datos_del_empleado_en_la_reservacion);
+        //        //Funcion para enviar los datos nuevos a la base
+        //        Enviar_actualizacion(datos_del_empleado_en_la_reservacion);
 
-                //Cerrar la conexion con la base
-                ora.Close();
+        //        //Cerrar la conexion con la base
+        //        ora.Close();
 
-                return true;
-            }
-            catch (Exception)
-            {
-                ora.Close();
-                return false;
-            }
-        }
-        //Funcion privada para buscar en la base de datos el servicio y el empleado
-        private void Enviar_actualizacion(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        ora.Close();
+        //        return false;
+        //    }
+        //}
+        ////Funcion privada para buscar en la base de datos el servicio y el empleado
+        //private void Enviar_actualizacion(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
 
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_EMPLEADO_DE_UNA_RESERVACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
+        //    OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_EMPLEADO_DE_UNA_RESERVACION", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_del_empleado_en_la_reservacion.codigo;
-            comando.Parameters.Add("p_codigo_reservacion", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo_de_reservacion;
-            comando.Parameters.Add("p_codigo_empleado", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo_de_empleado;
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_del_empleado_en_la_reservacion.codigo;
+        //    comando.Parameters.Add("p_codigo_reservacion", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo_de_reservacion;
+        //    comando.Parameters.Add("p_codigo_empleado", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo_de_empleado;
 
-            comando.ExecuteNonQuery();
+        //    comando.ExecuteNonQuery();
 
-        }
+        //}
 
-        //Funcion para poder borrar un empleado de una reservacion
-        public Boolean borrar_un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
-            try
-            {
+        ////Funcion para poder borrar un empleado de una reservacion
+        //public Boolean borrar_un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
+        //    try
+        //    {
 
-                conexion(Conexion_del_Cliente);
+        //        conexion(Conexion_del_Cliente);
 
-                //Abirir conexion
-                ora.Open();
-
-
-                buscar_y_borrar_un_cliente(datos_del_empleado_en_la_reservacion);
+        //        //Abirir conexion
+        //        ora.Open();
 
 
-                //Cerrar conexion
-                ora.Close();
-                return true;
+        //        buscar_y_borrar_un_cliente(datos_del_empleado_en_la_reservacion);
 
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
 
-                return false;
-            }
-        }
+        //        //Cerrar conexion
+        //        ora.Close();
+        //        return true;
 
-        private void buscar_y_borrar_un_cliente(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVICIO_DE_UN_EMPLEADO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo;
+        //        return false;
+        //    }
+        //}
 
-            comando.ExecuteNonQuery();
-        }
+        //private void buscar_y_borrar_un_cliente(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
+        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
+        //    OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVICIO_DE_UN_EMPLEADO", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
+
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo;
+
+        //    comando.ExecuteNonQuery();
+        //}
 
         //Variable para traer los empleados de una reservacion
         DataTable empleados_de_una_reservacion = new DataTable();
         //Funcion para poder traer todos los usuario existentes
-        public DataTable Consultar_Un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
+        //public DataTable Consultar_Un_empleado_de_una_reservacion(Datos_login Conexion_del_Cliente, Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
 
-            try
-            {
-                conexion(Conexion_del_Cliente);
+        //    try
+        //    {
+        //        conexion(Conexion_del_Cliente);
 
-                //Abir conexion
-                ora.Open();
+        //        //Abir conexion
+        //        ora.Open();
 
-                traer_datos_del_servicio(datos_del_empleado_en_la_reservacion);
+        //        traer_datos_del_servicio(datos_del_empleado_en_la_reservacion);
 
-                //Cerrar conexion
-                ora.Close();
+        //        //Cerrar conexion
+        //        ora.Close();
 
-                return empleados_de_una_reservacion;
+        //        return empleados_de_una_reservacion;
 
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
 
-                return null;
-            }
+        //        return null;
+        //    }
 
-        }
+        //}
 
-        //Funcion privada para buscar en la base de dato al administrador
-        private void traer_datos_del_servicio(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
-        {
-            OracleCommand comando = new OracleCommand("PK_BUSCAR_EMPLEADOS_EN_UNA_RESERVACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+        ////Funcion privada para buscar en la base de dato al administrador
+        //private void traer_datos_del_servicio(Empleados_de_una_reservacion datos_del_empleado_en_la_reservacion)
+        //{
+        //    OracleCommand comando = new OracleCommand("PK_BUSCAR_EMPLEADOS_EN_UNA_RESERVACION", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
 
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo;
-            comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_empleado_en_la_reservacion.codigo;
+        //    comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(empleados_de_una_reservacion);
-        }
+        //    OracleDataAdapter adaptador = new OracleDataAdapter();
+        //    adaptador.SelectCommand = comando;
+        //    adaptador.Fill(empleados_de_una_reservacion);
+        //}
 
     }
 }

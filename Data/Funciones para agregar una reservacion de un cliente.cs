@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DAL
+namespace Data
 {
     public class Funciones_para_agregar_una_reservacion_de_un_cliente
     {
@@ -64,8 +64,8 @@ namespace DAL
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("p_reservacion_codigo", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.codigo ;
-                cmd.Parameters.Add("p_cliente_codigo", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.Cliente.codigo;
+                //cmd.Parameters.Add("p_reservacion_codigo", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.codigo ;
+                //cmd.Parameters.Add("p_cliente_codigo", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.Cliente.codigo;
 
                 cmd.ExecuteNonQuery();
             }
@@ -141,15 +141,15 @@ namespace DAL
         private void Enviar_actualizacion(Cliente datos_de_la_reservacion_del_cliente)
         {
 
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_RESERVACION_DE_UN_CLIENTE", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            ////Comando para poder busacar el procedimiento en la base de datos y enviar los datos
+            //OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_RESERVACION_DE_UN_CLIENTE", ora);
+            //comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_de_la_reservacion_del_cliente.codigo;
-            comando.Parameters.Add("p_codigo_reservacion", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.reservacion.codigo;
-            comando.Parameters.Add("p_codigo_cliente", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.codigo;
+            //comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_de_la_reservacion_del_cliente.codigo;
+            //comando.Parameters.Add("p_codigo_reservacion", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.reservacion.codigo;
+            //comando.Parameters.Add("p_codigo_cliente", OracleDbType.Int32).Value = datos_de_la_reservacion_del_cliente.codigo;
 
-            comando.ExecuteNonQuery();
+            //comando.ExecuteNonQuery();
 
         }
 

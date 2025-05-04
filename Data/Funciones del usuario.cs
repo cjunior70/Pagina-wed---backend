@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DAL
+namespace Data
 {
     public class Funciones_del_usuario
     {
@@ -64,15 +64,15 @@ namespace DAL
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_usuario.cedula;
-                cmd.Parameters.Add("p_primer_nombre", OracleDbType.Varchar2).Value = datos_usuario.Primer_nombre;
-                cmd.Parameters.Add("p.segundo_nombre", OracleDbType.Varchar2).Value = datos_usuario.Segundo_nombre;
-                cmd.Parameters.Add("p.primer_apellido", OracleDbType.Varchar2).Value = datos_usuario.Primer_apellido;
-                cmd.Parameters.Add("p.segundo_apellido", OracleDbType.Varchar2).Value = datos_usuario.Segundo_apellido;
-                cmd.Parameters.Add("p.telefono", OracleDbType.Varchar2).Value = datos_usuario.telefono;
-                cmd.Parameters.Add("p.correo", OracleDbType.Varchar2).Value = datos_usuario.correo_electronico;
-                cmd.Parameters.Add("p.foto", OracleDbType.Blob).Value = datos_usuario.Foto;
-                cmd.Parameters.Add("p.sexo", OracleDbType.Char).Value = datos_usuario.sexo;
+                //cmd.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_usuario.cedula;
+                //cmd.Parameters.Add("p_primer_nombre", OracleDbType.Varchar2).Value = datos_usuario.Primer_nombre;
+                //cmd.Parameters.Add("p.segundo_nombre", OracleDbType.Varchar2).Value = datos_usuario.Segundo_nombre;
+                //cmd.Parameters.Add("p.primer_apellido", OracleDbType.Varchar2).Value = datos_usuario.Primer_apellido;
+                //cmd.Parameters.Add("p.segundo_apellido", OracleDbType.Varchar2).Value = datos_usuario.Segundo_apellido;
+                //cmd.Parameters.Add("p.telefono", OracleDbType.Varchar2).Value = datos_usuario.telefono;
+                //cmd.Parameters.Add("p.correo", OracleDbType.Varchar2).Value = datos_usuario.correo_electronico;
+                //cmd.Parameters.Add("p.foto", OracleDbType.Blob).Value = datos_usuario.Foto;
+                //cmd.Parameters.Add("p.sexo", OracleDbType.Char).Value = datos_usuario.sexo;
 
                 cmd.ExecuteNonQuery();
             }
@@ -154,16 +154,16 @@ namespace DAL
             OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_USUARIO", ora);
             comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_nuevos_del_usuario.codigo;
-            comando.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.cedula;
-            comando.Parameters.Add("p_primer_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Primer_nombre;
-            comando.Parameters.Add("p_segundo_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Segundo_nombre;
-            comando.Parameters.Add("p_primer_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Primer_apellido;
-            comando.Parameters.Add("p_segundo_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Segundo_apellido;
-            comando.Parameters.Add("p_telefono", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.telefono;
-            comando.Parameters.Add("p_correo", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.correo_electronico;
-            comando.Parameters.Add("p_foto", OracleDbType.Blob).Value = datos_nuevos_del_usuario.Foto;
-            comando.Parameters.Add("p_sexo", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.sexo;
+            //comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_nuevos_del_usuario.codigo;
+            //comando.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.cedula;
+            //comando.Parameters.Add("p_primer_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Primer_nombre;
+            //comando.Parameters.Add("p_segundo_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Segundo_nombre;
+            //comando.Parameters.Add("p_primer_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Primer_apellido;
+            //comando.Parameters.Add("p_segundo_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.Segundo_apellido;
+            //comando.Parameters.Add("p_telefono", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.telefono;
+            //comando.Parameters.Add("p_correo", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.correo_electronico;
+            //comando.Parameters.Add("p_foto", OracleDbType.Blob).Value = datos_nuevos_del_usuario.Foto;
+            //comando.Parameters.Add("p_sexo", OracleDbType.Varchar2).Value = datos_nuevos_del_usuario.sexo;
 
             comando.ExecuteNonQuery();
 

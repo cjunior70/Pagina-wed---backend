@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
+using Modules;
 using Oracle.ManagedDataAccess.Client;
 
-namespace DAL
+namespace Data
 {
     public class Funciones_para_ingresar_un_servicio_a_un_empleado
     {
@@ -26,7 +26,7 @@ namespace DAL
         }
 
         //Funcion para poder regirtar un cliente
-        public Boolean Ingresar_Un_Servicio_a_un_empleado(Datos_login Conexion_del_cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        public Boolean Ingresar_Un_Servicio_a_un_empleado(Datos_login Conexion_del_cliente) //, Servicio_de_un_empleado datos_del_servicio_del_empleado)
         {
 
             try
@@ -38,7 +38,7 @@ namespace DAL
                 ora.Open();
 
 
-                Enviar_Datos(datos_del_servicio_del_empleado);
+                Enviar_Datos();//datos_del_servicio_del_empleado);
 
 
                 //Cerrar conexion
@@ -57,15 +57,15 @@ namespace DAL
         }
 
         //Funcion privada para registrar los datos de un servicio a un empleado
-        private void Enviar_Datos(Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        private void Enviar_Datos()//Servicio_de_un_empleado datos_del_servicio_del_empleado)
         {
             //Intancia para poder entrar a la funcion
             using (OracleCommand cmd = new OracleCommand("PK_REGISTRAR_UN_SERVICO_A_UN_EMPLEADO", ora))
             {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("p_servicios_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_servicio;
-                cmd.Parameters.Add("p_empleado_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
+                //cmd.Parameters.Add("p_servicios_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_servicio;
+                //cmd.Parameters.Add("p_empleado_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
 
                 cmd.ExecuteNonQuery();
             }
@@ -113,7 +113,7 @@ namespace DAL
 
 
         //Funcion para poder modificar los datos de un servicio de un empleado
-        public Boolean Modificar_datos_de_un_servicio_De_un_Empleado(Datos_login Conexion_del_Cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        public Boolean Modificar_datos_de_un_servicio_De_un_Empleado(Datos_login Conexion_del_Cliente)// Servicio_de_un_empleado datos_del_servicio_del_empleado)
         {
             try
             {
@@ -123,8 +123,8 @@ namespace DAL
                 //Abrir la conexion con la base
                 ora.Open();
 
-                //Funcion para enviar los datos nuevos a la base
-                Enviar_actualizacion(datos_del_servicio_del_empleado);
+                ////Funcion para enviar los datos nuevos a la base
+                //Enviar_actualizacion(datos_del_servicio_del_empleado);
 
                 //Cerrar la conexion con la base
                 ora.Close();
@@ -138,109 +138,109 @@ namespace DAL
             }
         }
         //Funcion privada para buscar en la base de datos el servicio y el empleado
-        private void Enviar_actualizacion(Servicio_de_un_empleado datos_del_servicio_del_empleado)
-        {
+        //private void Enviar_actualizacion(Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        //{
 
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_SERVICO_DE_UN_EMPLEADO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
+        //    OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_SERVICO_DE_UN_EMPLEADO", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_del_servicio_del_empleado.codigo;
-            comando.Parameters.Add("p_codigo_servicio", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_servicio;
-            comando.Parameters.Add("p_codigo_empleado", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_del_servicio_del_empleado.codigo;
+        //    comando.Parameters.Add("p_codigo_servicio", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_servicio;
+        //    comando.Parameters.Add("p_codigo_empleado", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
 
-            comando.ExecuteNonQuery();
+        //    comando.ExecuteNonQuery();
 
-        }
+        //}
 
         //Funcion para poder borrar un usuario
-        public Boolean borrar_un_servicio_de_un_cliente(Datos_login Conexion_del_Cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
-        {
-            try
-            {
+        //public Boolean borrar_un_servicio_de_un_cliente(Datos_login Conexion_del_Cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        //{
+        //    try
+        //    {
 
-                conexion(Conexion_del_Cliente);
+        //        conexion(Conexion_del_Cliente);
 
-                //Abirir conexion
-                ora.Open();
-
-
-                buscar_y_borrar_un_cliente(datos_del_servicio_del_empleado);
+        //        //Abirir conexion
+        //        ora.Open();
 
 
-                //Cerrar conexion
-                ora.Close();
-                return true;
-
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
-
-                return false;
-            }
-        }
-
-        private void buscar_y_borrar_un_cliente(Servicio_de_un_empleado datos_del_servicio_del_empleado)
-        {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVICIO_DE_UN_EMPLEADO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo;
-
-            comando.ExecuteNonQuery();
-        }
-
-        //Variable para traer los servicios de un empleado
-        DataTable servicios_de_un_empleado = new DataTable();
-        //Funcion para poder traer todos los usuario existentes
-        public DataTable Consultar_Un_Servicio_de_un_Empleado(Datos_login Conexion_del_Cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
-        {
-
-            try
-            {
-                conexion(Conexion_del_Cliente);
-
-                //Abir conexion
-                ora.Open();
-
-                traer_datos_del_servicio(datos_del_servicio_del_empleado);
-
-                //Cerrar conexion
-                ora.Close();
-
-                return servicios_de_un_empleado;
-
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
-
-                return null;
-            }
-
-        }
-
-        //Funcion privada para buscar en la base de dato al administrador
-        private void traer_datos_del_servicio(Servicio_de_un_empleado datos_del_servicio_del_empleado)
-        {
-            OracleCommand comando = new OracleCommand("PK_BUSCAR_SERVICIOS_DE_UN_EMPLEADO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+        //        buscar_y_borrar_un_cliente(datos_del_servicio_del_empleado);
 
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
+        //        //Cerrar conexion
+        //        ora.Close();
+        //        return true;
 
-            Console.WriteLine("codigo del empleado : " + datos_del_servicio_del_empleado.codigo_del_empleado);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
 
-            comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+        //        return false;
+        //    }
+        //}
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(servicios_de_un_empleado);
-        }
+        //private void buscar_y_borrar_un_cliente(Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        //{
+        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
+        //    OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVICIO_DE_UN_EMPLEADO", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
+
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo;
+
+        //    comando.ExecuteNonQuery();
+        //}
+
+        ////Variable para traer los servicios de un empleado
+        //DataTable servicios_de_un_empleado = new DataTable();
+        ////Funcion para poder traer todos los usuario existentes
+        //public DataTable Consultar_Un_Servicio_de_un_Empleado(Datos_login Conexion_del_Cliente, Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        //{
+
+        //    try
+        //    {
+        //        conexion(Conexion_del_Cliente);
+
+        //        //Abir conexion
+        //        ora.Open();
+
+        //        traer_datos_del_servicio(datos_del_servicio_del_empleado);
+
+        //        //Cerrar conexion
+        //        ora.Close();
+
+        //        return servicios_de_un_empleado;
+
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
+
+        //        return null;
+        //    }
+
+        //}
+
+        ////Funcion privada para buscar en la base de dato al administrador
+        //private void traer_datos_del_servicio(Servicio_de_un_empleado datos_del_servicio_del_empleado)
+        //{
+        //    OracleCommand comando = new OracleCommand("PK_BUSCAR_SERVICIOS_DE_UN_EMPLEADO", ora);
+        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
+
+
+        //    comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_del_empleado.codigo_del_empleado;
+
+        //    Console.WriteLine("codigo del empleado : " + datos_del_servicio_del_empleado.codigo_del_empleado);
+
+        //    comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+        //    OracleDataAdapter adaptador = new OracleDataAdapter();
+        //    adaptador.SelectCommand = comando;
+        //    adaptador.Fill(servicios_de_un_empleado);
+        //}
 
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using Modelos;
+using Modules;
 
 namespace Data
 {
