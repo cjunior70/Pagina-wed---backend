@@ -1,7 +1,7 @@
-﻿using Modelos;
+﻿using Modules;
 using Data;
 
-namespace Servicios
+namespace Services
 {
     public class Funcion_de_Conexion
     {

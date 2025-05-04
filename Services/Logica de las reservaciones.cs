@@ -4,10 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL;
-using ENTITY;
+using Data;
+using Modules;
 
-namespace DLL
+namespace Services
 {
     public class logica_de_las_reservaciones
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DAL;
-using ENTITY;
+using Data;
+using Modules;
 
-namespace DLL
+namespace Services
 {
     public class Funciones_de_registros_a_la_aplicacion
     {

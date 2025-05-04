@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ENTITY;
-using DAL;
+using Data;
+using Modules;
 using System.Data;
 
-namespace DLL
+namespace Services
 {
     public class Logica_de_la_reservacion_de_un_cliente
     {
