@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Modelos;
+using Servicios;
 
 namespace Api.Controllers
 {
@@ -28,6 +30,25 @@ namespace Api.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+
+        //Esctura get para recibir mas de un parametro
+        [HttpGet("getsaludos2/")]
+        public string get()
+        {
+            Funcion_de_Conexion od=new Funcion_de_Conexion();
+
+            Datos_login op = new Datos_login();
+            op.usuario = "admin";
+            op.constraseña = "admin";
+
+            Boolean respuesta = od.conexion(op);
+
+            string mensaje = "la conexion fue : " + respuesta;
+
+            return mensaje;
+
         }
     }
 }
