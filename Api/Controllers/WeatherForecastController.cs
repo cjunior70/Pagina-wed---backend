@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Modelos;
-using Servicios;
+using Modules;
+using Services;
 
 namespace Api.Controllers
 {
@@ -40,7 +40,7 @@ namespace Api.Controllers
             Funcion_de_Conexion od=new Funcion_de_Conexion();
 
             Datos_login op = new Datos_login();
-            op.usuario = "admin";
+            op.usuario= "admin";
             op.constraseña = "admin";
 
             Boolean respuesta = od.conexion(op);

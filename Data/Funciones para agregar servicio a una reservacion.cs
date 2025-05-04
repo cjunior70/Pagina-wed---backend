@@ -155,33 +155,33 @@ namespace Data
         //}
 
         //Funcion para poder borrar un servicio de una reservacion
-        public Boolean borrar_un_servicio_de_un_servico_de_una_reservacion (Datos_login Conexion_del_Cliente, Servicio_de_una_reservacion datos_del_servicio_de_una_reservacion)
-        {
-            try
-            {
+        //public Boolean borrar_un_servicio_de_un_servico_de_una_reservacion (Datos_login Conexion_del_Cliente, Servicio_de_una_reservacion datos_del_servicio_de_una_reservacion)
+        //{
+        //    try
+        //    {
 
-                conexion(Conexion_del_Cliente);
+        //        conexion(Conexion_del_Cliente);
 
-                //Abirir conexion
-                ora.Open();
-
-
-                buscar_y_borrar_un_cliente(datos_del_servicio_de_una_reservacion);
+        //        //Abirir conexion
+        //        ora.Open();
 
 
-                //Cerrar conexion
-                ora.Close();
-                return true;
+        //        buscar_y_borrar_un_cliente(datos_del_servicio_de_una_reservacion);
 
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
 
-                return false;
-            }
-        }
+        //        //Cerrar conexion
+        //        ora.Close();
+        //        return true;
+
+        //    }
+        //    catch (Exception)
+        //    {
+        //        //Cerrar conexion
+        //        ora.Close();
+
+        //        return false;
+        //    }
+        //}
 
         //private void buscar_y_borrar_un_cliente(Servicio_de_una_reservacion datos_del_servicio_de_una_reservacion)
         //{
