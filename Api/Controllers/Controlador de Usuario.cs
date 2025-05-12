@@ -109,6 +109,7 @@ namespace Api.Controllers
 
             Boolean confimacion;
 
+
             Usuario datos_de_usuario = new Usuario();
 
             datos_de_usuario.codigo = Convert.ToInt32(codigo);
