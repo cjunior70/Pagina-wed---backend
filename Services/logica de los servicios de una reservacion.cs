@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Data;
 using Modules;
 
-namespace DLL
+namespace Services
 {
     //public class logica_De_los_servicios_de_una_reservacion
     //{

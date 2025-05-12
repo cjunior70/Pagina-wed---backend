@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Modules
@@ -12,6 +13,7 @@ namespace Modules
         {
         }
 
+        [JsonIgnore]
         //Lista de empresa del empleado
         public List<Empresa> lista_de_empresas { get; set; }
 
