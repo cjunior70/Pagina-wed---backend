@@ -36,9 +36,8 @@ namespace Data
                 //Abirir conexion
                 ora.Open();
 
-
+                //Funcion para enviar los datos a la base
                 Enviar_Datos(datos_del_cliente);
-
 
                 //Cerrar conexion
                 ora.Close();
@@ -55,27 +54,32 @@ namespace Data
 
         }
 
-        //Funcion privada para registrar los datos del nuevo cliente
-        private void Enviar_Datos(Cliente datos_del_cliente)
+        private void Enviar_Datos(Cliente datos_usuario)
         {
-            //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UN_CLIENTE", ora))
-            {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            //Escturcta para la sentencia sql
+            string sql = @"INSERT INTO CLIENTES (cedula, primer_nombre, segundo_nombre, primer_apellido,segundo_apellido,
+                        telefono,correo,foto,sexo
+                    ) VALUES (:cedula,:primer_nombre,:segundo_nombre,:primer_apellido,:segundo_apellido,
+                        :telefono,:correo,:foto,:sexo
+                    )";
 
-                //cmd.parameters.add("p_cedula", oracledbtype.varchar2).value = datos_del_cliente.cedula;
-                //cmd.parameters.add("p_primer_nombre", oracledbtype.varchar2).value = datos_del_cliente.primer_nombre;
-                //cmd.parameters.add("p.segundo_nombre", oracledbtype.varchar2).value = datos_del_cliente.segundo_nombre;
-                //cmd.parameters.add("p.primer_apellido", oracledbtype.varchar2).value = datos_del_cliente.primer_apellido;
-                //cmd.parameters.add("p.segundo_apellido", oracledbtype.varchar2).value = datos_del_cliente.segundo_apellido;
-                //cmd.parameters.add("p.telefono", oracledbtype.varchar2).value = datos_del_cliente.telefono;
-                //cmd.parameters.add("p.correo", oracledbtype.varchar2).value = datos_del_cliente.correo_electronico;
-                //cmd.parameters.add("p_foto", oracledbtype.blob).value = datos_del_cliente.foto;
-                //cmd.parameters.add("p.sexo", oracledbtype.char).value = datos_del_cliente.sexo;
+            //Intancia para poder entrar a la funcion
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add("cedula", OracleDbType.Varchar2).Value = datos_usuario.cedula;
+                cmd.Parameters.Add("primer_nombre", OracleDbType.Varchar2).Value = datos_usuario.primer_nombre;
+                cmd.Parameters.Add("segundo_nombre", OracleDbType.Varchar2).Value = datos_usuario.segundo_nombre;
+                cmd.Parameters.Add("primer_apellido", OracleDbType.Varchar2).Value = datos_usuario.primer_apellido;
+                cmd.Parameters.Add("segundo_apellido", OracleDbType.Varchar2).Value = datos_usuario.segundo_apellido;
+                cmd.Parameters.Add("telefono", OracleDbType.Varchar2).Value = datos_usuario.telefono;
+                cmd.Parameters.Add("correo", OracleDbType.Varchar2).Value = datos_usuario.correo;
+                cmd.Parameters.Add("foto", OracleDbType.Blob).Value = datos_usuario.foto; // Asegúrate que sea byte[]
+                cmd.Parameters.Add("sexo", OracleDbType.Char).Value = datos_usuario.sexo;
 
                 cmd.ExecuteNonQuery();
             }
 
+        
         }
 
         //Variable para poder guarda el listado de los usuarios guardados
@@ -109,13 +113,19 @@ namespace Data
 
         private void traer_datos()
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LOS_CLIENTE", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            string sql = "SELECT codigo,cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, " +
+                 "telefono, correo, sexo, foto FROM CLIENTES";
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_Clientes);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Tabla_Clientes.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
 
@@ -148,22 +158,33 @@ namespace Data
         private void Enviar_actualizacion(Cliente datos_nuevos_del_Cliente)
         {
 
-            //Comando para poder busacar el procedimiento en la base de datod y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_CLIENTE", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "UPDATE CLIENTES SET " +
+             "cedula = :cedula, " +
+             "primer_nombre = :primer_nombre, " +
+             "segundo_nombre = :segundo_nombre, " +
+             "primer_apellido = :primer_apellido, " +
+             "segundo_apellido = :segundo_apellido, " +
+             "telefono = :telefono, " +
+             "correo = :correo, " +
+             "sexo = :sexo, " +
+             "foto = :foto " +
+             "WHERE codigo = :codigo";
 
-            //comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_nuevos_del_Cliente.codigo;
-            //comando.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.cedula;
-            //comando.Parameters.Add("p_primer_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.Primer_nombre;
-            //comando.Parameters.Add("p_segundo_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.Segundo_nombre;
-            //comando.Parameters.Add("p_primer_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.Primer_apellido;
-            //comando.Parameters.Add("p_segundo_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.Segundo_apellido;
-            //comando.Parameters.Add("p_telefono", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.telefono;
-            //comando.Parameters.Add("p_correo", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.correo_electronico;
-            //comando.Parameters.Add("p_foto", OracleDbType.Blob).Value = datos_nuevos_del_Cliente.Foto;
-            //comando.Parameters.Add("p_sexo", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.sexo;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":cedula", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.cedula;
+                cmd.Parameters.Add(":primer_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.primer_nombre;
+                cmd.Parameters.Add(":segundo_nombre", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.segundo_nombre;
+                cmd.Parameters.Add(":primer_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.primer_apellido;
+                cmd.Parameters.Add(":segundo_apellido", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.segundo_apellido;
+                cmd.Parameters.Add(":telefono", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.telefono;
+                cmd.Parameters.Add(":correo", OracleDbType.Varchar2).Value = datos_nuevos_del_Cliente.correo;
+                cmd.Parameters.Add(":sexo", OracleDbType.Char).Value = datos_nuevos_del_Cliente.sexo;
+                cmd.Parameters.Add(":foto", OracleDbType.Blob).Value = datos_nuevos_del_Cliente.foto;
+                cmd.Parameters.Add(":codigo", OracleDbType.Int32).Value = datos_nuevos_del_Cliente.codigo;
 
-            comando.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            }
 
         }
 
@@ -198,17 +219,17 @@ namespace Data
 
         private void buscar_y_borrar_un_cliente(Cliente datos_del_cliente_a_eliminar)
         {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_CLIENTE", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "DELETE FROM CLIENTES WHERE codigo = :codigo";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_cliente_a_eliminar.codigo;
-
-            comando.ExecuteNonQuery();
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":codigo", OracleDbType.Int32).Value = datos_del_cliente_a_eliminar.codigo;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         //Variable para traer los datos de un solo administrador
-        DataTable Usuario = new DataTable();
+        DataTable Datos_Del_Cliente = new DataTable();
         //Funcion para poder traer todos los usuario existentes
         public DataTable Consultar_Un_Cliente(Datos_login Conexion_del_Cliente, Cliente datos_del_cliente)
         {
@@ -225,7 +246,7 @@ namespace Data
                 //Cerrar conexion
                 ora.Close();
 
-                return Usuario;
+                return Datos_Del_Cliente;
 
             }
             catch (Exception)
@@ -241,15 +262,20 @@ namespace Data
         //Funcion privada para buscar en la base de dato al administrador
         private void traer_datos_de_un_cliente(Cliente datos_del_cliente)
         {
-            OracleCommand comando = new OracleCommand("PK_BUSCAR_UN_CLIENTE", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "SELECT codigo,cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, " +
+                 "telefono, correo, sexo, foto FROM CLIENTES WHERE CODIGO = " + datos_del_cliente.codigo;
 
-            comando.Parameters.Add("p_cedula", OracleDbType.Varchar2).Value = datos_del_cliente.cedula;
-            comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Usuario);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Datos_Del_Cliente.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
     }
