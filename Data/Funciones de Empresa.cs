@@ -1,13 +1,8 @@
 ﻿using Modules;
 using Oracle.ManagedDataAccess.Client;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DDataAL
+namespace Data
 {
     public class Funciones_de_Empresa
     {
@@ -25,7 +20,7 @@ namespace DDataAL
             this.ora = new OracleConnection(conexion);
         }
 
-        //Funcion para poder regirtar una empresa
+        //Funcion para poder regirtar una datos_de_empresa_actualizados
         public Boolean Ingresar_Una_Empresa(Datos_login Conexion_del_usuario, Empresa datos_de_la_empresa)
         {
 
@@ -37,7 +32,7 @@ namespace DDataAL
                 //Abirir conexion
                 ora.Open();
 
-
+                Console.WriteLine("ESTOY AQui");
                 Enviar_Datos(datos_de_la_empresa);
 
 
@@ -57,28 +52,35 @@ namespace DDataAL
 
         }
 
-        //Funcion privada para registrar los datos de una empresa
+        //Funcion privada para registrar los datos de una datos_de_empresa_actualizados
         private void Enviar_Datos(Empresa datos_de_la_empresa)
         {
-            //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UNA_EMPRESA", ora))
-            {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                /*
-                cmd.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_la_empresa.nombre_de_la_empresa;
-                cmd.Parameters.Add("p_Descripcion_De_la_empresa", OracleDbType.Varchar2).Value = datos_de_la_empresa.descripcion_de_la_empresa;
-                cmd.Parameters.Add("p_whatsapp", OracleDbType.Varchar2).Value = datos_de_la_empresa.whatsapp;
-                cmd.Parameters.Add("p_correo_electronico", OracleDbType.Varchar2).Value = datos_de_la_empresa.correo;
-                cmd.Parameters.Add("p_instagram", OracleDbType.Varchar2).Value = datos_de_la_empresa.instagram;
-                cmd.Parameters.Add("p_facebook", OracleDbType.Varchar2).Value = datos_de_la_empresa.facebook;
-                cmd.Parameters.Add("p_descripcion_de_la_localizacion", OracleDbType.Varchar2).Value = datos_de_la_empresa.descripcion_de_la_localizacion;
-                cmd.Parameters.Add("p_imagen_en_miniatura", OracleDbType.Blob).Value = datos_de_la_empresa.imagen_miniatura;
-                cmd.Parameters.Add("p_imagen_general", OracleDbType.Blob).Value = datos_de_la_empresa.imagen_general;
-                cmd.Parameters.Add("p_usuario_codigo", OracleDbType.Int64).Value = datos_de_la_empresa.usuario.codigo;
-                cmd.Parameters.Add("P_ubicacion_codigo", OracleDbType.Int64).Value = datos_de_la_empresa.ubicaion.codigo;
+            //Escturcta para la sentencia sql
+            string sql = @"INSERT INTO EMPRESAS (nombre, EXTRELLAS, CORREO, DESCRIPCION_DE_LA_UBICACION,WHATSAPP,
+                        FACEBOOK,INSTAGRAM,IMAGEN_EN_MINIATURA,IMAGEN_EN_GENERAL,COMIENZO_LABORAL,FINALIZACION_LABORAL,
+                        CODIGO_UBICACION,CODIGO_USUARIO   
+                    ) VALUES (:nombre, :EXTRELLAS,:CORREO, :DESCRIPCION_DE_LA_UBICACION,:WHATSAPP,
+                        :FACEBOOK,:INSTAGRAM,:IMAGEN_EN_MINIATURA,:IMAGEN_EN_GENERAL,:COMIENZO_LABORAL,:FINALIZACION_LABORAL,
+                        :CODIGO_UBICACION,:CODIGO_USUARIO 
+                    )";
 
-                Console.WriteLine("codigo del dueño " + datos_de_la_empresa.usuario.codigo);
-                */
+            //Intancia para poder entrar a la funcion
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add("nombre", OracleDbType.Varchar2).Value = datos_de_la_empresa.nombre;
+                cmd.Parameters.Add("EXTRELLAS", OracleDbType.Int64).Value = datos_de_la_empresa.extrellas;
+                cmd.Parameters.Add("CORREO", OracleDbType.Varchar2).Value = datos_de_la_empresa.correo;
+                cmd.Parameters.Add("DESCRIPCION_DE_LA_UBICACION", OracleDbType.Varchar2).Value = datos_de_la_empresa.Descripcion_de_la_Ubicacion;
+                cmd.Parameters.Add("WHATSAPP", OracleDbType.Varchar2).Value = datos_de_la_empresa.whatsapp;
+                cmd.Parameters.Add("FACEBOOK", OracleDbType.Varchar2).Value = datos_de_la_empresa.facebook;
+                cmd.Parameters.Add("INSTAGRAM", OracleDbType.Varchar2).Value = datos_de_la_empresa.instagram;
+                cmd.Parameters.Add("IMAGEN_EN_MINIATURA", OracleDbType.Blob).Value = datos_de_la_empresa.imagen_en_miniatura;
+                cmd.Parameters.Add("IMAGEN_EN_GENERAL", OracleDbType.Blob).Value = datos_de_la_empresa.imagen_general;      // Asegúrate que sea byte[]
+                cmd.Parameters.Add("COMIENZO_LABORAL", OracleDbType.Varchar2).Value = datos_de_la_empresa.comiezo_laboral;      // Asegúrate que sea byte[]
+                cmd.Parameters.Add("FINALIZACION_LABORAL", OracleDbType.Varchar2).Value = datos_de_la_empresa.finalizacion_laboral; 
+                cmd.Parameters.Add("CODIGO_UBICACION", OracleDbType.Int64).Value = datos_de_la_empresa.Ubicacion.codigo;
+                cmd.Parameters.Add("CODIGO_USUARIO", OracleDbType.Int64).Value = datos_de_la_empresa.Usuario.codigo;
+
                 cmd.ExecuteNonQuery();
             }
 
@@ -86,7 +88,7 @@ namespace DDataAL
 
         //Variable para poder guarda las empresas registradas
         DataTable Tabla_De_Empresas = new DataTable();
-        //Funcion para poder traer todos las empresa existentes
+        //Funcion para poder traer todos las datos_de_empresa_actualizados existentes
         public DataTable Consultar_Todas_las_Empresas(Datos_login Conexion_del_Usuario)
         {
 
@@ -115,18 +117,25 @@ namespace DDataAL
         //Funcion privada para buscar en la bases de datos todos las empresas registrados
         private void traer_datos()
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LOS_EMPRESA", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            string sql = "SELECT nombre, EXTRELLAS, CORREO, DESCRIPCION_DE_LA_UBICACION, WHATSAPP, FACEBOOK, INSTAGRAM, " +
+              "IMAGEN_EN_MINIATURA, IMAGEN_EN_GENERAL, COMIENZO_LABORAL, FINALIZACION_LABORAL, " +
+              "CODIGO_UBICACION, CODIGO_USUARIO FROM EMPRESAS";
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_De_Empresas);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Tabla_De_Empresas.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
 
 
-        //Funcion para poder modificar los datos de una empresa
+        //Funcion para poder modificar los datos de una datos_de_empresa_actualizados
         public Boolean Modificar_datos_una_empresa(Datos_login Conexion_del_Usuario, Empresa datos_nuevo_de_la_empresa)
         {
             try
@@ -152,32 +161,49 @@ namespace DDataAL
             }
         }
 
-        //Funcion privada para buscar en la base de datos una empresa y actualizar sus datos
+        //Funcion privada para buscar en la base de datos una datos_de_empresa_actualizados y actualizar sus datos
         private void Enviar_actualizacion(Empresa datos_de_empresa_actualizados)
         {
 
-            //Comando para poder buscar el procedimiento en la base de datod y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_EMPRESA", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            /*
-            comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.codigo;
-            comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.nombre_de_la_empresa;
-            comando.Parameters.Add("p_Descripcion_De_la_empresa", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.descripcion_de_la_empresa;
-            comando.Parameters.Add("p_whatsapp", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.whatsapp;
-            comando.Parameters.Add("p_correo_electronico", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.correo;
-            comando.Parameters.Add("p_instagram", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.instagram;
-            comando.Parameters.Add("p_facebook", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.facebook;
-            comando.Parameters.Add("p_descripcion_de_la_localizacion", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.descripcion_de_la_localizacion;
-            comando.Parameters.Add("p_imagen_en_miniatura", OracleDbType.Blob).Value = datos_de_empresa_actualizados.imagen_miniatura;
-            comando.Parameters.Add("p_imagen_general", OracleDbType.Blob).Value = datos_de_empresa_actualizados.imagen_general;
-            comando.Parameters.Add("p_usuario_codigo", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.usuario.codigo;
-            comando.Parameters.Add("P_ubicacion_codigo", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.ubicaion.codigo;
-            */
-            comando.ExecuteNonQuery();
+            string sql = "UPDATE EMPRESAS SET " +
+             "nombre = :nombre, " +
+             "EXTRELLAS = :estrellas, " +
+             "CORREO = :correo, " +
+             "DESCRIPCION_DE_LA_UBICACION = :descripcion, " +
+             "WHATSAPP = :whatsapp, " +
+             "FACEBOOK = :facebook, " +
+             "INSTAGRAM = :instagram, " +
+             "IMAGEN_EN_MINIATURA = :imagenMiniatura, " +
+             "IMAGEN_EN_GENERAL = :imagenGeneral, " +
+             "COMIENZO_LABORAL = :comienzoLaboral, " +
+             "FINALIZACION_LABORAL = :finalizacionLaboral, " +
+             "CODIGO_UBICACION = :codigoUbicacion, " +
+             "CODIGO_USUARIO = :codigoUsuario " +
+             "WHERE CODIGO = :codigoEmpresa";
+
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":nombre", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.nombre;
+                cmd.Parameters.Add(":estrellas", OracleDbType.Int32).Value = datos_de_empresa_actualizados.extrellas;
+                cmd.Parameters.Add(":correo", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.correo;
+                cmd.Parameters.Add(":descripcion", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.Descripcion_de_la_Ubicacion;
+                cmd.Parameters.Add(":whatsapp", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.whatsapp;
+                cmd.Parameters.Add(":facebook", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.facebook;
+                cmd.Parameters.Add(":instagram", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.instagram;
+                cmd.Parameters.Add(":imagenMiniatura", OracleDbType.Blob).Value =datos_de_empresa_actualizados.imagen_en_miniatura;
+                cmd.Parameters.Add(":imagenGeneral", OracleDbType.Blob).Value = datos_de_empresa_actualizados.imagen_general;
+                cmd.Parameters.Add(":comienzoLaboral", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.comiezo_laboral;
+                cmd.Parameters.Add(":finalizacionLaboral", OracleDbType.Varchar2).Value = datos_de_empresa_actualizados.finalizacion_laboral;
+                cmd.Parameters.Add(":codigoUbicacion", OracleDbType.Int32).Value = datos_de_empresa_actualizados.Ubicacion.codigo;
+                cmd.Parameters.Add(":codigoUsuario", OracleDbType.Int32).Value = 6;//datos_de_empresa_actualizados.Usuario.codigo;
+                cmd.Parameters.Add(":codigoEmpresa", OracleDbType.Int32).Value = datos_de_empresa_actualizados.codigo;
+
+                cmd.ExecuteNonQuery();
+            }
 
         }
 
-        //Funcion para poder borrar una empresa
+        //Funcion para poder borrar una datos_de_empresa_actualizados
         public Boolean borrar_una_empresa(Datos_login Conexion_del_Usuario, Empresa datos_de_una_empresa)
         {
             try
@@ -208,17 +234,17 @@ namespace DDataAL
 
         private void buscar_y_borrar_una_empresa(Empresa datos_de_la_empresa_a_eliminar)
         {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UNA_EMPRESA", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "DELETE FROM EMPRESAS WHERE codigo = :codigo";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_empresa_a_eliminar.codigo;
-
-            comando.ExecuteNonQuery();
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":codigo", OracleDbType.Int32).Value = datos_de_la_empresa_a_eliminar.codigo;
+                cmd.ExecuteNonQuery();
+            }
         }
 
-        //Variable para traer los datos de una sola empresa
-        DataTable empresa = new DataTable();
+        //Variable para traer los datos de una sola datos_de_empresa_actualizados
+        DataTable datos_de_empresa_actualizados = new DataTable();
         //Funcion para poder traer todos las empresas existentes
         public DataTable Consultar_Una_Empresa(Datos_login Conexion_del_Usuario, Empresa datos_de_la_empresa)
         {
@@ -235,7 +261,7 @@ namespace DDataAL
                 //Cerrar conexion
                 ora.Close();
 
-                return empresa;
+                return datos_de_empresa_actualizados;
 
             }
             catch (Exception)
@@ -251,16 +277,21 @@ namespace DDataAL
         //Funcion privada para buscar en la base de dato a un empleado
         private void traer_datos_de_una_empresa(Empresa datos_de_la_empresa)
         {
-            OracleCommand comando = new OracleCommand("PK_BUSCAR_UNA_EMPRESA", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "SELECT nombre, EXTRELLAS, CORREO, DESCRIPCION_DE_LA_UBICACION, WHATSAPP, FACEBOOK, INSTAGRAM, " +
+              "IMAGEN_EN_MINIATURA, IMAGEN_EN_GENERAL, COMIENZO_LABORAL, FINALIZACION_LABORAL, " +
+              "CODIGO_UBICACION, CODIGO_USUARIO FROM EMPRESAS  WHERE CODIGO = " + datos_de_la_empresa.codigo;
 
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_empresa.codigo;
-            comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(empresa);
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    datos_de_empresa_actualizados.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
 

@@ -18,7 +18,7 @@ namespace Data
         //Funcion para la conexion con la base de datos 
         private void conexion(Datos_login datos_de_conexion)
         {
-            //Cadena de conexion para ingresar el un servicio a una empresa
+            //Cadena de conexion para ingresar el un servicio a una datos_de_empresa_actualizados
             string conexion = $"DATA SOURCE=localhost:1521/xepdb1;PASSWORD={datos_de_conexion.constraseña};USER ID={datos_de_conexion.usuario};";
 
             //Instancia de la clase de oracleconection para la conexion a la base de datos de oracle
@@ -56,7 +56,7 @@ namespace Data
 
         //}
 
-        ////Funcion privada para registrar los datos de un servicio a una empresa
+        ////Funcion privada para registrar los datos de un servicio a una datos_de_empresa_actualizados
         //private void Enviar_Datos(Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
         //{
         //    //Intancia para poder entrar a la funcion
@@ -72,7 +72,7 @@ namespace Data
 
         //}
 
-        //Variable para poder guarda el listado de los servicios de la empresa
+        //Variable para poder guarda el listado de los servicios de la datos_de_empresa_actualizados
         DataTable Tabla_de_los_servicios_de_la_empresa = new DataTable();
         //Funcion para poder traer todos los usuarios existentes
         public DataTable Consultar_servicios_y_empresas_relacionados(Datos_login Conexion_del_Cliente)
@@ -112,7 +112,7 @@ namespace Data
         }
 
 
-        //Funcion para poder modificar los datos de un servicio de una empresa
+        //Funcion para poder modificar los datos de un servicio de una datos_de_empresa_actualizados
         //public Boolean Modificar_datos_de_un_servicio_De_una_Empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
         //{
         //    try
@@ -137,7 +137,7 @@ namespace Data
         //        return false;
         //    }
         //}
-        ////Funcion privada para buscar en la base de datos el servicio y la empresa
+        ////Funcion privada para buscar en la base de datos el servicio y la datos_de_empresa_actualizados
         //private void Enviar_actualizacion(Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
         //{
 
@@ -153,7 +153,7 @@ namespace Data
 
         //}
 
-        ////Funcion para poder borrar una empresa
+        ////Funcion para poder borrar una datos_de_empresa_actualizados
         //public Boolean borrar_un_servicio_de_una_empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_la_empresa)
         //{
         //    try
@@ -193,7 +193,7 @@ namespace Data
         //    comando.ExecuteNonQuery();
         //}
 
-        //Variable para traer los servicios de una empresa
+        //Variable para traer los servicios de una datos_de_empresa_actualizados
         DataTable servicio_de_un_empleado = new DataTable();
         //Funcion para poder traer todos los usuario existentes
         //public DataTable Consultar_Un_Servicio_de_una_empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_una_empresa)

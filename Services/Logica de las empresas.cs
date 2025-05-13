@@ -9,164 +9,154 @@ using Modules;
 
 namespace Services
 {
-    //public class logica_de_las_empresas
-    //{
+    public class logica_de_las_empresas
+    {
+        //Llamada de la funcion del dal para ingresar a este los datos a la base
+            Funciones_de_Empresa funciones_de_la_empresa = new Funciones_de_Empresa();
 
-    //    //Funcion para el ingreso de datos de una empresa
-    //    public Boolean registro_de_una_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
-    //    {
+        //Funcion para el ingreso de datos de una empresa
+        public Boolean registro_de_una_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
+        {
 
-    //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_de_Empresa funciones_de_la_empresa = new Funciones_de_Empresa();
+            //Variabale para la confirmacion de ninguno error ajeno
+            Boolean confirmacion;
 
-    //        //Variabale para la confirmacion de ninguno error ajeno
-    //        Boolean confirmacion;
+            confirmacion = funciones_de_la_empresa.Ingresar_Una_Empresa(datos_de_conexion, datos_de_la_empresa);
 
-    //       confirmacion = funciones_de_la_empresa.Ingresar_Una_Empresa(datos_de_conexion, datos_de_la_empresa);
-
-    //       return confirmacion;
-
-
-    //    }
-
-    //    //Funcion para consultar los datos de una empresa con interes o datos de la empresa
-    //    public List<Empresa> consultar_datos_de_una_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
-    //    {
-    //        List<Empresa> Datos_De_la_empresa = new List<Empresa>();
-
-    //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_de_Empresa funciones_De_Empresa = new Funciones_de_Empresa();
-
-    //        //Variable para saber la existencia de alguien ya registrado
-    //        DataTable existencia;
-
-    //        existencia = funciones_De_Empresa.Consultar_Una_Empresa(datos_de_conexion, datos_de_la_empresa);
-
-    //        Datos_De_la_empresa = mapeo_del_datatable_que_tiene_los_datos_de_informacion_de_una_sola_empresa(existencia,datos_de_la_empresa);
-
-    //        return Datos_De_la_empresa;
-
-    //    }
-
-    //    private List<Empresa> mapeo_del_datatable_que_tiene_los_datos_de_informacion_de_una_sola_empresa(DataTable datos_de_todas_las_empresa_globales, Empresa datos_de_la_empresa_a_buscar)
-    //    {
-    //        List<Empresa> lista_de_las_empresas = new List<Empresa>();
-
-    //        for (int i = 0; i < datos_de_todas_las_empresa_globales.Rows.Count; i++)
-    //        {
-
-    //            Empresa datos = new Empresa();
-    //            datos.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["codigo"]);
-    //            datos.nombre_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["nombre"]);
-    //            datos.descripcion_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_EMPRESA"]);
-
-    //            if (datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"] != null)
-    //            {
-    //                //datos.extrellas = Convert.ToInt16(datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"]);
-    //            }
+            return confirmacion;
 
 
-    //            datos.whatsapp = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["WHATSAPP"]);
-    //            datos.correo = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["CORREO_ELECTRONICO"]);
-    //            datos.instagram = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["INSTAGRAM"]);
-    //            datos.facebook = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["FACEBOOK"]);
-    //            datos.descripcion_de_la_localizacion = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_LOCALIZACION"]);
-    //            datos.imagen_miniatura = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_EN_MINIATURA"]);
-    //            datos.imagen_general = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_GENERAL"]);
-    //            datos.usuario.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["PROPIETARIO"]);
-    //            datos.ubicaion.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["UBICACION"]);
+        }
 
-    //            if ( datos.codigo == datos_de_la_empresa_a_buscar.codigo )
-    //            {
-    //                lista_de_las_empresas.Add(datos);
-    //            }
+        //Funcion para consultar todas las empresas registradas
+        public DataTable consultar_todas_las_empresas(Datos_login datos_de_conexion)
+        {
 
-    //        }
+            //Variable para saber la Lista_de_empresas resgistradas de alguien ya registrado
+            DataTable Lista_de_empresas_resgistradas;
 
-    //        return lista_de_las_empresas;
-    //    }
+            Lista_de_empresas_resgistradas = funciones_de_la_empresa.Consultar_Todas_las_Empresas(datos_de_conexion);
 
-    //    //Funcion para consultar todas las empresas registradas
-    //    public List<Empresa> consultar_todas_las_empresas(Datos_login datos_de_conexion)
-    //    {
-    //        List<Empresa> lista_de_las_empresas = new List<Empresa>();
+            return Lista_de_empresas_resgistradas = funciones_de_la_empresa.Consultar_Todas_las_Empresas(datos_de_conexion);
+        }
 
-    //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_de_Empresa funciones_De_Empresa = new Funciones_de_Empresa();
 
-    //        //Variable para saber la existencia de alguien ya registrado
-    //        DataTable existencia;
+        //Funcion para consultar los datos de una empresa con interes o datos de la empresa
+        public DataTable consultar_datos_de_una_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
+        {
 
-    //        existencia = funciones_De_Empresa.Consultar_Todas_las_Empresas(datos_de_conexion);
+            //Variable para saber la Lista_de_empresas resgistradas de alguien ya registrado
+            DataTable Informacion_De_la_empresa = new DataTable();
 
-    //        lista_de_las_empresas =  mapeo_del_datatable_que_tiene_los_datos_de_informacion(existencia);
+            Informacion_De_la_empresa = funciones_de_la_empresa.Consultar_Una_Empresa(datos_de_conexion, datos_de_la_empresa);
 
-    //        return lista_de_las_empresas;
-    //    }
 
-    //    private List<Empresa> mapeo_del_datatable_que_tiene_los_datos_de_informacion(DataTable datos_de_todas_las_empresa_globales )
-    //    {
-    //        List<Empresa> lista_de_las_empresas = new List<Empresa>();
+            return Informacion_De_la_empresa;
 
-    //        for (int i = 0; i < datos_de_todas_las_empresa_globales.Rows.Count; i++)
-    //        {
+        }
 
-    //            Empresa datos = new Empresa();
-    //            datos.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["codigo"]);
-    //            datos.nombre_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["nombre"]);
-    //            datos.descripcion_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_EMPRESA"]);
+        //Funcion para actualizar datos de una empresa 
+        public Boolean actualizar_datos_de_la_empresa(Empresa datos_actualizados, Datos_login datos_de_conexion)
+        {
 
-    //            if (datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"] != null)
-    //            {
-    //                //datos.extrellas = Convert.ToInt16(datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"]);
-    //            }
+            //Variable para saber la Lista_de_empresas resgistradas de alguien ya registrado
+            Boolean confirmacion;
 
-                
-    //            datos.whatsapp = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["WHATSAPP"]);
-    //            datos.correo = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["CORREO_ELECTRONICO"]);
-    //            datos.instagram = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["INSTAGRAM"]);
-    //            datos.facebook = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["FACEBOOK"]);
-    //            datos.descripcion_de_la_localizacion = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_LOCALIZACION"]);
-    //            datos.imagen_miniatura = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_EN_MINIATURA"]);
-    //            datos.imagen_general = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_GENERAL"]);
-    //            datos.usuario.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["PROPIETARIO"]);
-    //            datos.ubicaion.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["UBICACION"]);
+            confirmacion = funciones_de_la_empresa.Modificar_datos_una_empresa(datos_de_conexion, datos_actualizados);
 
-    //            lista_de_las_empresas.Add(datos);
+            return confirmacion;
 
-    //        }
+        }
 
-    //        return lista_de_las_empresas;
-    //    }
+        //Funcion para poder borrar datos de la empresa
+        public Boolean borrar_datos_de_la_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
+        {
 
-    //    //Funcion para actualizar datos de una empresa 
-    //    public Boolean actualizar_datos_de_la_empresa(Empresa datos_actualizados, Datos_login datos_de_conexion)
-    //    {
-    //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_de_Empresa funciones_De_Empresa = new Funciones_de_Empresa();
+            //Variable para saber la Lista_de_empresas resgistradas de alguien ya registrado
+            Boolean Confirmacion;
 
-    //        //Variable para saber la existencia de alguien ya registrado
-    //        Boolean existencia;
+            Confirmacion = funciones_de_la_empresa.borrar_una_empresa(datos_de_conexion, datos_de_la_empresa);
 
-    //        existencia = funciones_De_Empresa.Modificar_datos_una_empresa(datos_de_conexion, datos_actualizados);
+            return Confirmacion;
+        }
 
-    //        return existencia;
+        //    private List<Empresa> mapeo_del_datatable_que_tiene_los_datos_de_informacion_de_una_sola_empresa(DataTable datos_de_todas_las_empresa_globales, Empresa datos_de_la_empresa_a_buscar)
+        //    {
+        //        List<Empresa> lista_de_las_empresas = new List<Empresa>();
 
-    //    }
+        //        for (int i = 0; i < datos_de_todas_las_empresa_globales.Rows.Count; i++)
+        //        {
 
-    //    //Funcion para poder borrar datos de la empresa
-    //    public Boolean borrar_datos_de_la_empresa(Empresa datos_de_la_empresa, Datos_login datos_de_conexion)
-    //    {
-    //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_de_Empresa funciones_De_Empresa = new Funciones_de_Empresa();
+        //            Empresa datos = new Empresa();
+        //            datos.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["codigo"]);
+        //            datos.nombre_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["nombre"]);
+        //            datos.descripcion_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_EMPRESA"]);
 
-    //        //Variable para saber la existencia de alguien ya registrado
-    //        Boolean existencia;
+        //            if (datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"] != null)
+        //            {
+        //                //datos.extrellas = Convert.ToInt16(datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"]);
+        //            }
 
-    //        existencia = funciones_De_Empresa.borrar_una_empresa(datos_de_conexion, datos_de_la_empresa);
 
-    //        return existencia;
-    //    }
+        //            datos.whatsapp = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["WHATSAPP"]);
+        //            datos.correo = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["CORREO_ELECTRONICO"]);
+        //            datos.instagram = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["INSTAGRAM"]);
+        //            datos.facebook = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["FACEBOOK"]);
+        //            datos.descripcion_de_la_localizacion = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_LOCALIZACION"]);
+        //            datos.imagen_miniatura = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_EN_MINIATURA"]);
+        //            datos.imagen_general = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_GENERAL"]);
+        //            datos.usuario.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["PROPIETARIO"]);
+        //            datos.ubicaion.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["UBICACION"]);
 
-    //}
+        //            if ( datos.codigo == datos_de_la_empresa_a_buscar.codigo )
+        //            {
+        //                lista_de_las_empresas.Add(datos);
+        //            }
+
+        //        }
+
+        //        return lista_de_las_empresas;
+        //    }
+
+
+        //    private List<Empresa> mapeo_del_datatable_que_tiene_los_datos_de_informacion(DataTable datos_de_todas_las_empresa_globales )
+        //    {
+        //        List<Empresa> lista_de_las_empresas = new List<Empresa>();
+
+        //        for (int i = 0; i < datos_de_todas_las_empresa_globales.Rows.Count; i++)
+        //        {
+
+        //            Empresa datos = new Empresa();
+        //            datos.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["codigo"]);
+        //            datos.nombre_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["nombre"]);
+        //            datos.descripcion_de_la_empresa = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_EMPRESA"]);
+
+        //            if (datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"] != null)
+        //            {
+        //                //datos.extrellas = Convert.ToInt16(datos_de_todas_las_empresa_globales.Rows[i]["EXTRELLAS"]);
+        //            }
+
+
+        //            datos.whatsapp = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["WHATSAPP"]);
+        //            datos.correo = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["CORREO_ELECTRONICO"]);
+        //            datos.instagram = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["INSTAGRAM"]);
+        //            datos.facebook = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["FACEBOOK"]);
+        //            datos.descripcion_de_la_localizacion = Convert.ToString(datos_de_todas_las_empresa_globales.Rows[i]["DESCRIPCION_DE_LA_LOCALIZACION"]);
+        //            datos.imagen_miniatura = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_EN_MINIATURA"]);
+        //            datos.imagen_general = (Byte[])(datos_de_todas_las_empresa_globales.Rows[i]["IMAGEN_GENERAL"]);
+        //            datos.usuario.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["PROPIETARIO"]);
+        //            datos.ubicaion.codigo = Convert.ToInt32(datos_de_todas_las_empresa_globales.Rows[i]["UBICACION"]);
+
+        //            lista_de_las_empresas.Add(datos);
+
+        //        }
+
+        //        return lista_de_las_empresas;
+        //    }
+
+
+
+
+
+    }
 }
