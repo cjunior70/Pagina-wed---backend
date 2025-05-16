@@ -58,21 +58,72 @@ namespace Data
         //Funcion privada para registrar los datos de una ubicacion
         private void Enviar_Datos(Ubicacion datos_de_ubicacion)
         {
-            //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UNA_UBICACION", ora))
-            {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            //Escturcta para la sentencia sql
+            string sql = @"INSERT INTO UBICACIONES (LATITUD, LONGITUD )
+                        VALUES (:LATITUD, :LONGITUD)";
 
-                cmd.Parameters.Add("p_lalitud", OracleDbType.Varchar2).Value = datos_de_ubicacion.latitud;
-                cmd.Parameters.Add("p_longitud", OracleDbType.Varchar2).Value = datos_de_ubicacion.longitud;
+            //Intancia para poder entrar a la funcion
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add("LATITUD", OracleDbType.Varchar2).Value = datos_de_ubicacion.latitud;
+                cmd.Parameters.Add("LONGITUD", OracleDbType.Varchar2).Value = datos_de_ubicacion.longitud;
 
                 cmd.ExecuteNonQuery();
             }
 
         }
 
+        //Variable para traer los datos de una sola ubicacion
+        DataTable Ubicacion_con_codigo = new DataTable();
+        //Funcion para poder traer todos las ubicaciones existentes
+        public DataTable Consultar_Una_Ubicacion_por_Codigo(Datos_login Conexion_del_Usuario, Ubicacion datos_de_la_ubicacion)
+        {
+
+            try
+            {
+                conexion(Conexion_del_Usuario);
+
+                //Abir conexion
+                ora.Open();
+
+                traer_datos_de_una_ubicacion_por_codigo(datos_de_la_ubicacion);
+
+                //Cerrar conexion
+                ora.Close();
+
+                return Ubicacion_con_codigo;
+
+            }
+            catch (Exception)
+            {
+                //Cerrar conexion
+                ora.Close();
+
+                return null;
+            }
+
+        }
+
+        //Funcion privada para buscar en la base de dato a un empleado
+        private void traer_datos_de_una_ubicacion_por_codigo(Ubicacion datos_de_la_ubicacion)
+        {
+            string sql = "SELECT codigo,LATITUD, LONGITUD FROM UBICACIONES WHERE CODIGO = " + datos_de_la_ubicacion.codigo;
+
+
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Ubicacion_con_codigo.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
+        }
+
         //Variable para poder guarda el listado de las ubicaciones guardados
-        DataTable Tabla_Empleados = new DataTable();
+        DataTable tabla_de_ubicaciones = new DataTable();
         //Funcion para poder traer todos las ubicaciones existentes
         public DataTable Consultar_Todas_las_ubicaciones(Datos_login Conexion_del_Usuario)
         {
@@ -87,7 +138,7 @@ namespace Data
 
                 ora.Close();
 
-                return Tabla_Empleados;
+                return tabla_de_ubicaciones;
 
             }
             catch (Exception)
@@ -102,13 +153,18 @@ namespace Data
 
         private void traer_datos()
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LAS_UBICACIONES", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            string sql = "SELECT codigo,LATITUD, LONGITUD FROM UBICACIONES ";
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_Empleados);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    tabla_de_ubicaciones.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
 
@@ -142,15 +198,20 @@ namespace Data
         private void Enviar_actualizacion(Ubicacion datos_de_ubicacion)
         {
 
-            //Comando para poder busacar el procedimiento en la base de datod y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_UBICACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = @"
+                            UPDATE UBICACIONES
+                            SET LATITUD = :LATITUD,
+                                LONGITUD = :LONGITUD
+                            WHERE CODIGO = :CODIGO";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Int16).Value = datos_de_ubicacion.codigo;
-            comando.Parameters.Add("p_lalitud", OracleDbType.Varchar2).Value = datos_de_ubicacion.latitud;
-            comando.Parameters.Add("p_longitud", OracleDbType.Varchar2).Value = datos_de_ubicacion.longitud;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":LATITUD", OracleDbType.Varchar2).Value = datos_de_ubicacion.latitud;
+                cmd.Parameters.Add(":LONGITUD", OracleDbType.Varchar2).Value = datos_de_ubicacion.longitud;
+                cmd.Parameters.Add(":CODIGO", OracleDbType.Int16).Value = datos_de_ubicacion.codigo;
 
-            comando.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            }
 
         }
 
@@ -185,13 +246,13 @@ namespace Data
 
         private void buscar_y_borrar_una_ubicacion(Ubicacion datos_de_la_ubicacion_a_eliminar)
         {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UNA_UBICACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "DELETE FROM UBICACIONES WHERE codigo = :codigo";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_ubicacion_a_eliminar.codigo;
-
-            comando.ExecuteNonQuery();
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":codigo", OracleDbType.Int32).Value = datos_de_la_ubicacion_a_eliminar.codigo;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         //Variable para traer los datos de una sola ubicacion
@@ -239,52 +300,6 @@ namespace Data
             OracleDataAdapter adaptador = new OracleDataAdapter();
             adaptador.SelectCommand = comando;
             adaptador.Fill(Ubicacion);
-        }
-
-        //Variable para traer los datos de una sola ubicacion
-        DataTable Ubicacion_con_codigo = new DataTable();
-        //Funcion para poder traer todos las ubicaciones existentes
-        public DataTable Consultar_Una_Ubicacion_por_Codigo(Datos_login Conexion_del_Usuario, Ubicacion datos_de_la_ubicacion)
-        {
-
-            try
-            {
-                conexion(Conexion_del_Usuario);
-
-                //Abir conexion
-                ora.Open();
-
-                traer_datos_de_una_ubicacion_por_codigo(datos_de_la_ubicacion);
-
-                //Cerrar conexion
-                ora.Close();
-
-                return Ubicacion_con_codigo;
-
-            }
-            catch (Exception)
-            {
-                //Cerrar conexion
-                ora.Close();
-
-                return null;
-            }
-
-        }
-
-        //Funcion privada para buscar en la base de dato a un empleado
-        private void traer_datos_de_una_ubicacion_por_codigo(Ubicacion datos_de_la_ubicacion)
-        {
-            OracleCommand comando = new OracleCommand("PK_BUSCAR_UNA_UBICACION_POR_CODIGO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-
-
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_ubicacion.codigo;
-            comando.Parameters.Add("p_registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Ubicacion_con_codigo);
         }
 
     }
