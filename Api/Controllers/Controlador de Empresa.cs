@@ -79,7 +79,7 @@ namespace Api.Controllers
 
         //Esctura put para traer datos de un solo usuario
         [HttpPut("Put_Actualizar_Datos_de_Empresas/")]
-        public ActionResult<Boolean> Put_Actualizar_Datos_de_Empresas([FromRoute] Empresa Datos_de_empresa)
+        public ActionResult<Boolean> Put_Actualizar_Datos_de_Empresas([FromBody] Empresa Datos_de_empresa)
         {
 
             Boolean confimacion;

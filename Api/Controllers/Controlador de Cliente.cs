@@ -79,7 +79,9 @@ namespace Api.Controllers
 
         //Esctura put para traer datos de un solo cliente
         [HttpPut("Put_Actualizar_Datos_Clientes/")]
-        public ActionResult<Boolean> Put_Actualizar_Datos([FromRoute] Cliente datos_De_nuevo_cliente)
+
+        //El frombody es para recibir el odjeto
+        public ActionResult<Boolean> Put_Actualizar_Datos([FromBody] Cliente datos_De_nuevo_cliente)
         {
 
             Boolean confimacion;
