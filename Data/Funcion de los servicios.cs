@@ -60,18 +60,18 @@ namespace Data
         //Funcion privada para registrar los datos de un servicio
         private void Enviar_Datos(Servicios datos_de_servicio)
         {
+            //Escturcta para la sentencia sql
+            string sql = @"INSERT INTO SERVICIOS (nombre
+                    ) VALUES (:nombre
+                    )";
+
             //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UN_SERVICIO", ora))
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
             {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
-                //cmd.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_de_servicio.nombre_del_servicio;
-                //cmd.Parameters.Add("p_precio", OracleDbType.Int16).Value = datos_de_servicio.precio;
-
-                //El tiempo toca descomponarlo en string para poder guardarlo como se debe
-                cmd.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_de_servicio.tiempo_promedio;
+                cmd.Parameters.Add("nombre", OracleDbType.Varchar2).Value = "opcion1"; //datos_de_servicio.nombre;
 
                 cmd.ExecuteNonQuery();
+             
             }
 
         }
@@ -107,13 +107,19 @@ namespace Data
 
         private void traer_datos()
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LOS_SERVICIOS", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            string sql = "SELECT codigo,NOMBRE FROM SERVICIOS "; 
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_Servicios);
+
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+
+                // Usar OracleDataReader para ejecutar la consulta y llenar el DataTable
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Tabla_Servicios.Load(lector); // Cargar los datos del lector directamente en el DataTable
+                }
+            }
         }
 
 
@@ -147,16 +153,17 @@ namespace Data
         private void Enviar_actualizacion(Servicios datos_del_servicio)
         {
 
-            //Comando para poder buscar el procedimiento en la base de datod y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_SERVICIO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "UPDATE SERVICIOS SET " +
+             "nombre = :nombre " +
+             "WHERE codigo = :codigo";
 
-            //.Parameters.Add("p_codigo", OracleDbType.Int16).Value = datos_del_servicio.codigo;
-            //comando.Parameters.Add("p_nombre", OracleDbType.Varchar2).Value = datos_del_servicio.nombre_del_servicio;
-            //comando.Parameters.Add("p_precio", OracleDbType.Double).Value = datos_del_servicio.precio;
-            //comando.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_del_servicio.tiempo_promedio;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":nombre", OracleDbType.Varchar2).Value = datos_del_servicio.nombre;
+                cmd.Parameters.Add(":codigo", OracleDbType.Int64).Value = datos_del_servicio.codigo;
 
-            comando.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            }
 
         }
 
@@ -189,15 +196,15 @@ namespace Data
             }
         }
 
-        private void buscar_y_borrar_un_servicio(Servicios datos_de_la_ubicacion_a_eliminar)
+        private void buscar_y_borrar_un_servicio(Servicios datos_del_servicio_a_eliminar)
         {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVCIO", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "DELETE FROM SERVICIOS WHERE codigo = :codigo";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_ubicacion_a_eliminar.codigo;
-
-            comando.ExecuteNonQuery();
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":codigo", OracleDbType.Int32).Value = datos_del_servicio_a_eliminar.codigo;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         //Variable para traer los datos de un solo servicio
