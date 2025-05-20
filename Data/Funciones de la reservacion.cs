@@ -59,26 +59,42 @@ namespace Data
         //Funcion privada para registrar los datos de una reservacion
         private void Enviar_Datos(Reservacion datos_de_la_reservacion)
         {
-            //Intancia para poder entrar a la funcion
-            using (OracleCommand cmd = new OracleCommand("PK_INGRESAR_UNA_RESERVACION", ora))
-            {
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = @"INSERT INTO RESERVACIONES (
+                        CREACION,
+                        FECHA,
+                        VALOR,
+                        ESTADO,
+                        CODIGO_EMPRESA,
+                        CODIGO_CLIENTE,
+                        CODIGO_CONTABILIDAD
+                   ) VALUES (
+                        :CREACION,
+                        :FECHA,
+                        :VALOR,
+                        :ESTADO,
+                        :CODIGO_EMPRESA,
+                        :CODIGO_CLIENTE,
+                        :CODIGO_CONTABILIDAD
+                   )";
 
-                //cmd.Parameters.Add("p_fecha_de_la_reservacion", OracleDbType.Date).Value = datos_de_la_reservacion.fecha_de_la_reservacion.Date ;
-                //cmd.Parameters.Add("p_empresa_codigo", OracleDbType.Int16).Value = datos_de_la_reservacion.datos_de_empresa_actualizados.codigo;
-                //cmd.Parameters.Add("p_cliente_codigo", OracleDbType.Int16).Value = datos_de_la_reservacion.Cliente.codigo;
-                //cmd.Parameters.Add("p_estado", OracleDbType.Varchar2).Value = datos_de_la_reservacion.estado;
-                //cmd.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_de_la_reservacion.hora;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":CREACION", OracleDbType.TimeStamp).Value = null;//datos_de_la_reservacion.creacion;
+                cmd.Parameters.Add(":FECHA", OracleDbType.TimeStamp).Value = null;// datos_de_la_reservacion.fecha_reservacion;
+                cmd.Parameters.Add(":VALOR", OracleDbType.Decimal).Value = null;//datos_de_la_reservacion.pago_total;
+                cmd.Parameters.Add(":ESTADO", OracleDbType.Varchar2).Value = "d";//datos_de_la_reservacion.estado;
+                cmd.Parameters.Add(":CODIGO_EMPRESA", OracleDbType.Int64).Value = null;//datos_de_la_reservacion.datos_empresa.codigo;
+                cmd.Parameters.Add(":CODIGO_CLIENTE", OracleDbType.Int64).Value = null;//datos_de_la_reservacion.datos_cliente.codigo;
+                cmd.Parameters.Add(":CODIGO_CONTABILIDAD", OracleDbType.Int64).Value = null;//datos_de_la_reservacion.datos_contabilidad.codigo;
 
                 cmd.ExecuteNonQuery();
             }
-
         }
 
         //Variable para poder guarda el listado de los servicos
-        DataTable Tabla_Servicios = new DataTable();
+        DataTable Tabla_De_reservacion_De_un_cliente = new DataTable();
         //Funcion para poder traer todos los servicios existentes
-        public DataTable Consultar_Todas_las_reservaciones(Datos_login Conexion_del_Usuario)
+        public DataTable Consultar_Todas_las_reservaciones(Datos_login Conexion_del_Usuario, Reservacion datos_de_una_reservacion)
         {
 
             try
@@ -87,11 +103,11 @@ namespace Data
 
                 ora.Open();
 
-                traer_datos();
+                traer_datos(datos_de_una_reservacion);
 
                 ora.Close();
 
-                return Tabla_Servicios;
+                return Tabla_De_reservacion_De_un_cliente;
 
             }
             catch (Exception)
@@ -104,17 +120,72 @@ namespace Data
         }
         //Funcion privada para buscar en la bases de datos todos las ubicaciones registrados
 
-        private void traer_datos()
+        private void traer_datos(Reservacion datos_de_una_reservacion)
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LAS_RESERVACIONES", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            // Supongamos que datos_de_la_reservacion.codigo contiene el ID de la reservación a buscar
+            string sql = "SELECT CODIGO, CREACION, FECHA, VALOR, ESTADO, " +
+                         "CODIGO_EMPRESA, CODIGO_CLIENTE, CODIGO_CONTABILIDAD " +
+                         "FROM RESERVACIONES WHERE CODIGO_CLIENTE = :codigo_cliente";
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_Servicios);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+                comando.Parameters.Add(":codigo_cliente", OracleDbType.Int32).Value = datos_de_una_reservacion.datos_cliente.codigo;
+
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Tabla_De_reservacion_De_un_cliente.Load(lector); // Cargar resultado en DataTable
+                }
+            }
         }
 
+        //Variable para poder traer todas las reservaciones de un empresa
+        DataTable Tabla_De_reservacion_De_la_empresa = new DataTable();
+        //Funcion para poder traer todos los servicios existentes
+        public DataTable reservaciones_De_la_empresa(Datos_login Conexion_del_Usuario, Reservacion datos_de_una_reservacion)
+        {
+
+            try
+            {
+                conexion(Conexion_del_Usuario);
+
+                ora.Open();
+
+                traer_datos_de_la_empresa(datos_de_una_reservacion);
+
+                ora.Close();
+
+                return Tabla_De_reservacion_De_un_cliente;
+
+            }
+            catch (Exception)
+            {
+                ora.Close();
+
+                return null;
+            }
+
+        }
+        //Funcion privada para buscar en la bases de datos todos las ubicaciones registrados
+
+        private void traer_datos_de_la_empresa(Reservacion datos_de_una_reservacion)
+        {
+            // Supongamos que datos_de_la_reservacion.codigo contiene el ID de la reservación a buscar
+            string sql = "SELECT CODIGO, CREACION, FECHA, VALOR, ESTADO, " +
+                         "CODIGO_EMPRESA, CODIGO_CLIENTE, CODIGO_CONTABILIDAD " +
+                         "FROM RESERVACIONES WHERE CODIGO_EMPRESA = :codigo_empresa";
+
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = System.Data.CommandType.Text;
+                comando.Parameters.Add(":codigo_empresa", OracleDbType.Int32).Value = datos_de_una_reservacion.datos_empresa.codigo;
+
+                using (OracleDataReader lector = comando.ExecuteReader())
+                {
+                    Tabla_De_reservacion_De_un_cliente.Load(lector); // Cargar resultado en DataTable
+                }
+            }
+        }
 
 
         //Funcion para poder modificar los datos de una reservacion
@@ -143,21 +214,33 @@ namespace Data
             }
         }
         //Funcion privada para buscar en la base de datos un servicio y actualizar sus datos
-        private void Enviar_actualizacion(Reservacion datos_de_la_reservacion)
+        private void Enviar_actualizacion(Reservacion datos_reservacion)
         {
 
-            //Comando para poder buscar el procedimiento en la base de datod y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UNA_RESERVACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = @"UPDATE RESERVACIONES SET 
+                CREACION = :CREACION,
+                FECHA = :FECHA,
+                VALOR = :VALOR,
+                ESTADO = :ESTADO,
+                CODIGO_EMPRESA = :CODIGO_EMPRESA,
+                CODIGO_CLIENTE = :CODIGO_CLIENTE,
+                CODIGO_CONTABILIDAD = :CODIGO_CONTABILIDAD
+              WHERE CODIGO = :CODIGO";
 
-            //comando.Parameters.Add("p_fecha_de_la_reservacion", OracleDbType.Date).Value = datos_de_la_reservacion.fecha_de_la_reservacion.Date;
-            //comando.Parameters.Add("p_empresa_codigo", OracleDbType.Int16).Value = datos_de_la_reservacion.datos_de_empresa_actualizados.codigo;
-            //comando.Parameters.Add("p_cliente_codigo", OracleDbType.Int16).Value = datos_de_la_reservacion.Cliente.codigo;
-            //comando.Parameters.Add("p_estado", OracleDbType.Varchar2).Value = datos_de_la_reservacion.estado;
-            //comando.Parameters.Add("p_tiempo", OracleDbType.Varchar2).Value = datos_de_la_reservacion.hora;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":CREACION", OracleDbType.Date).Value = null;//datos_reservacion.creacion;
+                cmd.Parameters.Add(":FECHA", OracleDbType.TimeStamp).Value = null; //datos_reservacion.fecha_reservacion;
+                cmd.Parameters.Add(":VALOR", OracleDbType.Decimal).Value = null;//datos_reservacion.pago_total;
+                cmd.Parameters.Add(":ESTADO", OracleDbType.Varchar2).Value = null;//datos_reservacion.estado;
+                cmd.Parameters.Add(":CODIGO_EMPRESA", OracleDbType.Int32).Value = null; //datos_reservacion.datos_empresa.codigo;
+                cmd.Parameters.Add(":CODIGO_CLIENTE", OracleDbType.Int32).Value = 14;//datos_reservacion.datos_cliente.codigo;
+                cmd.Parameters.Add(":CODIGO_CONTABILIDAD", OracleDbType.Int32).Value = null;// datos_reservacion.datos_contabilidad.codigo;
+                cmd.Parameters.Add(":CODIGO", OracleDbType.Int32).Value = 12;// datos_reservacion.codigo; // ID de la reservación que se actualizará
 
+                cmd.ExecuteNonQuery();
+            }
 
-            comando.ExecuteNonQuery();
 
         }
 
@@ -192,13 +275,14 @@ namespace Data
 
         private void buscar_y_borrar_una_reservacion(Reservacion datos_de_la_ubicacion_a_eliminar)
         {
-            //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-            OracleCommand comando = new OracleCommand("PK_ELIMINAR_UNA_RESERVACION", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            string sql = "DELETE FROM RESERVACIONES WHERE CODIGO = :CODIGO";
 
-            comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_de_la_ubicacion_a_eliminar.codigo;
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":CODIGO", OracleDbType.Int32).Value = datos_de_la_ubicacion_a_eliminar.codigo;
 
-            comando.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         //Variable para traer los datos des una reservacion
