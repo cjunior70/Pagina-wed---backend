@@ -17,12 +17,12 @@ namespace Services
     //    public Boolean registro_de_usuario(Usuario datos_de_usuario)
     //    {
     //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-    //        Funciones_del_usuario funciones_Del_Usuario=new Funciones_del_usuario();
+    //        Funciones_del_Horario funciones_Del_horarios=new Funciones_del_Horario();
 
     //        //Variabale para la confirmacion de ninguno error ajeno
     //        Boolean confirmacion;
 
-    //        confirmacion = funciones_Del_Usuario.Ingresar_Un_Usuario(datos_de_conexion,datos_de_usuario);
+    //        confirmacion = funciones_Del_horarios.Ingresar_Un_Usuario(datos_de_conexion,datos_de_usuario);
 
     //        return confirmacion;
 

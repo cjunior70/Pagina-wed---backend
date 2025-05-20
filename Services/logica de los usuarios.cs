@@ -13,7 +13,7 @@ namespace Services
     {
 
         //Llamada de la funcion del dal para ingresar a este los datos a la base
-        Funciones_del_usuario funciones_Del_Usuario = new Funciones_del_usuario();
+        Funciones_del_Horario funciones_Del_Usuario = new Funciones_del_Horario();
 
         //Funcion para el ingreso de datos de un usuario
         public Boolean registro_de_un_usuario(Usuario datos_de_usuario, Datos_login datos_de_conexion)
@@ -32,7 +32,7 @@ namespace Services
         public DataTable consulta_De_datos_personales_por_codigo(Usuario datos_de_usuario, Datos_login datos_de_conexion)
         {
             //Llamada de la funcion del dal para ingresar a este los datos a la base
-            Funciones_del_usuario funciones_Del_Usuario = new Funciones_del_usuario();
+            Funciones_del_Horario funciones_Del_Usuario = new Funciones_del_Horario();
 
             //Variable para saber la datos_del_usuario de alguien ya registrado
             DataTable datos_del_usuario = new DataTable();
@@ -46,7 +46,7 @@ namespace Services
         public DataTable consultar_todo_los_usuarios(Datos_login datos_de_conexion)
         {
             //Llamada de la funcion del dal para ingresar a este los datos a la base
-            Funciones_del_usuario funciones_Del_Usuario = new Funciones_del_usuario();
+            Funciones_del_Horario funciones_Del_Usuario = new Funciones_del_Horario();
 
             //Variable para saber la datos_del_usuario de alguien ya registrado
             DataTable existencia = new DataTable();
@@ -60,7 +60,7 @@ namespace Services
         public Boolean actualizar_datos_de_un_usuario(Usuario datos_nuevo_Del_Usuario, Datos_login datos_de_conexion)
         {
             //Llamada de la funcion del dal para ingresar a este los datos a la base
-            Funciones_del_usuario funciones_Del_usuario = new Funciones_del_usuario();
+            Funciones_del_Horario funciones_Del_usuario = new Funciones_del_Horario();
 
             //Variable para saber la datos_del_usuario de alguien ya registrado
             Boolean existencia;
@@ -74,7 +74,7 @@ namespace Services
         public Boolean borrar_datos_de_un_usuario(Usuario datos_nuevo_Del_Usuario, Datos_login datos_de_conexion)
         {
             //Llamada de la funcion del dal para ingresar a este los datos a la base
-            Funciones_del_usuario funciones_Del_Usuario = new Funciones_del_usuario();
+            Funciones_del_Horario funciones_Del_Usuario = new Funciones_del_Horario();
 
             //Variable para saber la datos_del_usuario de alguien ya registrado
             Boolean existencia;
@@ -88,12 +88,12 @@ namespace Services
         //    public DataTable consulta_De_datos_personales(Usuario datos_de_usuario, Datos_login datos_de_conexion)
         //    {
         //        //Llamada de la funcion del dal para ingresar a este los datos a la base
-        //        Funciones_del_usuario funciones_Del_Usuario = new Funciones_del_usuario();
+        //        Funciones_del_Horario funciones_Del_horarios = new Funciones_del_Horario();
 
         //        //Variable para saber la datos_del_usuario de alguien ya registrado
         //        DataTable datos_del_usuario=new DataTable();
 
-        //        datos_del_usuario = funciones_Del_Usuario.Consultar_Un_usuario(datos_de_conexion, datos_de_usuario);
+        //        datos_del_usuario = funciones_Del_horarios.Consultar_Un_usuario(datos_de_conexion, datos_de_usuario);
 
         //        return datos_del_usuario;
         //    }

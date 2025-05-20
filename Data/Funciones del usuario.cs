@@ -9,7 +9,7 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace Data
 {
-    public class Funciones_del_usuario
+    public class Funciones_del_Horario
     {
 
         //Variables para poder uso globar
