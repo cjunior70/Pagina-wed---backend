@@ -9,7 +9,7 @@ namespace Api.Controllers
     public class Controlador_de_Empleados : ControllerBase
     {
         //Instancia de la clase logica_de_los_usuarios globales
-        logica_de_los_empleados logica_De_Los_Empleados = new logica_de_los_empleados();
+        logica_de_ logica_De_Los_Empleados = new logica_de_();
 
         //Esctura post para registrar un usuario
         [HttpPost("Post_Registrar_Empleado/")]

@@ -9,7 +9,7 @@ using Modules;
 
 namespace Services
 {
-    public class logica_de_los_empleados
+    public class logica_de_
     {
 
         Funciones_del_empleado funciones_Del_Empleado = new Funciones_del_empleado();
