@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Modules;
 using Oracle.ManagedDataAccess.Client;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Data
 {
@@ -25,66 +26,84 @@ namespace Data
             this.ora = new OracleConnection(conexion);
         }
 
-        ////Funcion para poder regirtar un cliente
-        //public Boolean Ingresar_Un_Servicio_a_una_Empresa(Datos_login Conexion_del_cliente, Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
-        //{
-
-        //    try
-        //    {
-
-        //        conexion(Conexion_del_cliente);
-
-        //        //Abirir conexion
-        //        ora.Open();
-
-
-        //        Enviar_Datos(datos_del_servicio_de_la_empresa_y_su_servicio);
-
-
-        //        //Cerrar conexion
-        //        ora.Close();
-        //        return true;
-
-        //    }
-        //    catch (Exception)
-        //    {
-        //        //Cerrar conexion
-        //        ora.Close();
-
-        //        return false;
-        //    }
-
-        //}
-
-        ////Funcion privada para registrar los datos de un servicio a una datos_de_empresa_actualizados
-        //private void Enviar_Datos(Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
-        //{
-        //    //Intancia para poder entrar a la funcion
-        //    using (OracleCommand cmd = new OracleCommand("PK_REGISTRAR_UN_SERVICO_A_UNA_EMPRESA", ora))
-        //    {
-        //        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
-        //        cmd.Parameters.Add("p_servicios_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_de_la_empresa_y_su_servicio.codigo_del_servicio;
-        //        cmd.Parameters.Add("p_empleado_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_de_la_empresa_y_su_servicio.codigo_de_la_empresa;
-
-        //        cmd.ExecuteNonQuery();
-        //    }
-
-        //}
-
-        //Variable para poder guarda el listado de los servicios de la datos_de_empresa_actualizados
-        DataTable Tabla_de_los_servicios_de_la_empresa = new DataTable();
-        //Funcion para poder traer todos los usuarios existentes
-        public DataTable Consultar_servicios_y_empresas_relacionados(Datos_login Conexion_del_Cliente)
+        //Funcion para poder regirtar un cliente
+        public bool Ingresar_Un_Servicio_a_una_Empresa(Empresa datos_del_servicio_de_la_empresa_y_su_servicio, Datos_login Conexion_del_cliente)
         {
 
             try
             {
-                conexion(Conexion_del_Cliente);
+
+                conexion(Conexion_del_cliente);
+
+                //Abirir conexion
+                ora.Open();
+
+
+                Enviar_Datos_EmpresaServicios(datos_del_servicio_de_la_empresa_y_su_servicio);
+
+
+                //Cerrar conexion
+                ora.Close();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                //Cerrar conexion
+                ora.Close();
+
+                return false;
+            }
+
+        }
+
+        private void Enviar_Datos_EmpresaServicios(Empresa datos_de_la_empresa)
+        {
+            // Sentencia SQL de inserción sin el campo CODIGO, que es generado por el trigger
+            string sql = @"INSERT INTO EMPRESA_SERVICIOS (
+                       CODIGO_SERVICIO,
+                       CODIGO_EMPRESA,
+                       PRECIO,
+                       TIEMPO_PROMEDIO
+                   ) VALUES (
+                       :CODIGO_SERVICIO,
+                       :CODIGO_EMPRESA,
+                       :PRECIO,
+                       :TIEMPO_PROMEDIO
+                   )";
+
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.BindByName = true;
+
+                for (int i = 0; i < datos_de_la_empresa.lista_de_servicios.Count; i++)
+                {
+                    cmd.Parameters.Clear(); // Limpiar parámetros en cada iteración
+
+                    cmd.Parameters.Add(":CODIGO_SERVICIO", OracleDbType.Int32).Value = datos_de_la_empresa.lista_de_servicios[i].codigo;
+                    cmd.Parameters.Add(":CODIGO_EMPRESA", OracleDbType.Int32).Value = datos_de_la_empresa.codigo;
+                    cmd.Parameters.Add(":PRECIO", OracleDbType.Decimal).Value = datos_de_la_empresa.lista_de_servicios[i].precio;
+                    cmd.Parameters.Add(":TIEMPO_PROMEDIO", OracleDbType.IntervalDS).Value = datos_de_la_empresa.lista_de_servicios[i].tiempo_promedio;
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+        //Variable para poder guarda el listado de los servicios de la datos_de_empresa_actualizados
+        DataTable Tabla_de_los_servicios_de_la_empresa = new DataTable();
+        //Funcion para poder traer todos los usuarios existentes
+        public DataTable Consultar_servicios_y_empresas_relacionados(Datos_login datos_de_conexion, Empresa datos_de_la_empresa)
+        {
+
+            try
+            {
+                conexion(datos_de_conexion);
 
                 ora.Open();
 
-                traer_datos();
+                traer_datos(datos_de_la_empresa);
 
                 ora.Close();
 
@@ -100,101 +119,128 @@ namespace Data
 
         }
         //Funcion privada para buscar en la bases de datos todos los servicios y sus empresas
-        private void traer_datos()
+        private void traer_datos(Empresa datos_de_la_empresa)
         {
-            OracleCommand comando = new OracleCommand("PK_MOSTRAR_TODOS_LOS_SERVICIOS_Y_EMPRESAS_RELACIONADOS", ora);
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
-            comando.Parameters.Add("registro", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+            string sql = @"SELECT 
+                        es.CODIGO,
+                        es.CODIGO_SERVICIO,
+                        es.CODIGO_EMPRESA,
+                        es.PRECIO,
+                        es.TIEMPO_PROMEDIO,
+                        s.NOMBRE AS NOMBRE_SERVICIO
+                   FROM 
+                        EMPRESA_SERVICIOS es
+                   JOIN 
+                        SERVICIOS s ON es.CODIGO_SERVICIO = s.CODIGO
+                   WHERE 
+                        es.CODIGO_EMPRESA = :codigo_empresa";
 
-            OracleDataAdapter adaptador = new OracleDataAdapter();
-            adaptador.SelectCommand = comando;
-            adaptador.Fill(Tabla_de_los_servicios_de_la_empresa);
+            using (OracleCommand comando = new OracleCommand(sql, ora))
+            {
+                comando.CommandType = CommandType.Text;
+                comando.Parameters.Add(":codigo_empresa", OracleDbType.Int32).Value = datos_de_la_empresa.codigo;
+
+                OracleDataAdapter adaptador = new OracleDataAdapter(comando);
+                Tabla_de_los_servicios_de_la_empresa.Clear(); // Limpiar antes de llenar (opcional pero recomendado)
+                adaptador.Fill(Tabla_de_los_servicios_de_la_empresa);
+            }
+        }
+
+        //funcion para poder modificar los datos de un servicio de una datos_de_empresa_actualizados
+        public bool modificar_datos_de_un_servicio_de_una_empresa(Datos_login conexion_del_cliente, Empresa datos_del_serivcio_de_la_empresa_a_actualizar, string codigo_del_servicio)
+        {
+            try
+            {
+                //funcion para hacer la conexion con la base de datos
+                conexion(conexion_del_cliente);
+
+                //abrir la conexion con la base
+                ora.Open();
+
+                //funcion para enviar los datos nuevos a la base
+                enviar_actualizacion(datos_del_serivcio_de_la_empresa_a_actualizar, codigo_del_servicio);
+
+                //cerrar la conexion con la base
+                ora.Close();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                ora.Close();
+                return false;
+            }
+        }
+
+        //funcion privada para buscar en la base de datos el servicio y la datos_de_empresa_actualizados
+        private void enviar_actualizacion(Empresa datos_del_servicio_de_la_empresa_y_su_servicio, string codigo_del_servicio)
+        {
+
+            string sql = @"UPDATE EMPRESA_SERVICIOS
+                           SET 
+                               CODIGO_SERVICIO = :NUEVO_CODIGO_SERVICIO,
+                               PRECIO = :PRECIO,
+                               TIEMPO_PROMEDIO = :TIEMPO_PROMEDIO
+                           WHERE 
+                               CODIGO = :CODIGO";
+
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":NUEVO_CODIGO_SERVICIO", OracleDbType.Int32).Value = 2;//datos_del_servicio_de_la_empresa_y_su_servicio.lista_de_servicios[1].codigo;
+                cmd.Parameters.Add(":PRECIO", OracleDbType.Decimal).Value = 18;//datos_del_servicio_de_la_empresa_y_su_servicio.lista_de_servicios[1].precio;
+                cmd.Parameters.Add(":TIEMPO_PROMEDIO", OracleDbType.IntervalDS).Value = null;//datos_del_servicio_de_la_empresa_y_su_servicio.lista_de_servicios[1].tiempo_promedio;
+
+                cmd.Parameters.Add(":CODIGO", OracleDbType.Int32).Value = codigo_del_servicio;
+
+                cmd.ExecuteNonQuery();
+            }
+
         }
 
 
-        //Funcion para poder modificar los datos de un servicio de una datos_de_empresa_actualizados
-        //public Boolean Modificar_datos_de_un_servicio_De_una_Empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
-        //{
-        //    try
-        //    {
-        //        //Funcion para hacer la conexion con la base de datos
-        //        conexion(Conexion_del_Cliente);
+        //Funcion para poder borrar una datos_de_empresa_actualizados
+        public bool borrar_un_servicio_de_una_empresa(Datos_login Conexion_del_Cliente, string codigo)
+        {
+            try
+            {
 
-        //        //Abrir la conexion con la base
-        //        ora.Open();
+                conexion(Conexion_del_Cliente);
 
-        //        //Funcion para enviar los datos nuevos a la base
-        //        Enviar_actualizacion(datos_del_servicio_de_la_empresa_y_su_servicio);
-
-        //        //Cerrar la conexion con la base
-        //        ora.Close();
-
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        ora.Close();
-        //        return false;
-        //    }
-        //}
-        ////Funcion privada para buscar en la base de datos el servicio y la datos_de_empresa_actualizados
-        //private void Enviar_actualizacion(Servicio_de_una_Empresa datos_del_servicio_de_la_empresa_y_su_servicio)
-        //{
-
-        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-        //    OracleCommand comando = new OracleCommand("PK_ACTUALIZAR_DATOS_DE_UN_SERVICO_DE_UN_EMPRESA", ora);
-        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
-
-        //    comando.Parameters.Add("p_codigo", OracleDbType.Int64).Value = datos_del_servicio_de_la_empresa_y_su_servicio.codigo;
-        //    comando.Parameters.Add("p_codigo_servicio", OracleDbType.Varchar2).Value = datos_del_servicio_de_la_empresa_y_su_servicio.codigo_del_servicio;
-        //    comando.Parameters.Add("p_codigo_empleado", OracleDbType.Varchar2).Value = datos_del_servicio_de_la_empresa_y_su_servicio.codigo_de_la_empresa;
-
-        //    comando.ExecuteNonQuery();
-
-        //}
-
-        ////Funcion para poder borrar una datos_de_empresa_actualizados
-        //public Boolean borrar_un_servicio_de_una_empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_la_empresa)
-        //{
-        //    try
-        //    {
-
-        //        conexion(Conexion_del_Cliente);
-
-        //        //Abirir conexion
-        //        ora.Open();
+                //Abirir conexion
+                ora.Open();
 
 
-        //        buscar_y_borrar_un_cliente(datos_del_servicio_de_la_empresa);
+                buscar_y_borrar_un_cliente(codigo);
 
 
-        //        //Cerrar conexion
-        //        ora.Close();
-        //        return true;
+                //Cerrar conexion
+                ora.Close();
+                return true;
 
-        //    }
-        //    catch (Exception)
-        //    {
-        //        //Cerrar conexion
-        //        ora.Close();
+            }
+            catch (Exception)
+            {
+                //Cerrar conexion
+                ora.Close();
 
-        //        return false;
-        //    }
-        //}
+                return false;
+            }
+        }
 
-        //private void buscar_y_borrar_un_cliente(Servicio_de_una_Empresa datos_del_servicio_de_una_empresa)
-        //{
-        //    //Comando para poder busacar el procedimiento en la base de datos y enviar los datos
-        //    OracleCommand comando = new OracleCommand("PK_ELIMINAR_UN_SERVICIO_DE_UNA_EMPRESA", ora);
-        //    comando.CommandType = System.Data.CommandType.StoredProcedure;
+        private void buscar_y_borrar_un_cliente(string codigo)
+        {
+            string sql = @"DELETE FROM EMPRESA_SERVICIOS
+                   WHERE CODIGO = :CODIGO";
 
-        //    comando.Parameters.Add("p_codigo", OracleDbType.Varchar2).Value = datos_del_servicio_de_una_empresa.codigo;
-
-        //    comando.ExecuteNonQuery();
-        //}
+            using (OracleCommand cmd = new OracleCommand(sql, ora))
+            {
+                cmd.Parameters.Add(":CODIGO", OracleDbType.Int32).Value = codigo;
+                cmd.ExecuteNonQuery();
+            }
+        }
 
         //Variable para traer los servicios de una datos_de_empresa_actualizados
-        DataTable servicio_de_un_empleado = new DataTable();
+        // DataTable servicio_de_un_empleado = new DataTable();
         //Funcion para poder traer todos los usuario existentes
         //public DataTable Consultar_Un_Servicio_de_una_empresa(Datos_login Conexion_del_Cliente, Servicio_de_una_Empresa datos_del_servicio_de_una_empresa)
         //{
