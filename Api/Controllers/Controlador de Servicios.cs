@@ -69,7 +69,7 @@ namespace Api.Controllers
         //    datos_de_conexion.usuario = "admin";
         //    datos_de_conexion.constraseña = "admin";
 
-        //    Datos_de_usuario = logica_De_Los_servicios.consulta_De_datos_personales_por_codigo(datos_de_usuario, datos_de_conexion);
+        //    Datos_de_usuario = logica_De_Los_servicios.consultar_fechas_de_una_empresa(datos_de_usuario, datos_de_conexion);
 
         //    string mensaje = JsonConvert.SerializeObject(Datos_de_usuario);
 
