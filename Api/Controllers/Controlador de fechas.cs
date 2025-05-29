@@ -115,7 +115,7 @@ namespace Api.Controllers
             datos_de_conexion.usuario = "admin";
             datos_de_conexion.constraseña = "admin";
 
-            lista_de_usuario = logica_De_Los_Usuarios.consultar_todo_los_usuarios(datos_de_conexion);
+            lista_de_usuario = logica_De_Las_reservaciones.consultar_todo_los_usuarios(datos_de_conexion);
 
             string mensaje = JsonConvert.SerializeObject(lista_de_usuario);
 

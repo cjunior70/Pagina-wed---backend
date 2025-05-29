@@ -6,14 +6,14 @@ using System.Data;
 
 namespace Api.Controllers
 {
-    public class Controlador_de_Reservaciones : ControllerBase
+    public class Controlador_de_detalles_de_la_reservacion : ControllerBase
     {
         //Instancia de la clase logica_de_los_usuarios globales
         logica_de_las_reservaciones logica_De_Los_Usuarios = new logica_de_las_reservaciones();
 
         //Esctura post para registrar un usuario
-        [HttpPost("Post_Registrar_Una_Reservacion/")]
-        public ActionResult<Boolean> Post_Registrar_Una_Reservacion([FromBody] Reservacion datos_de_la_reservacion_nuevos)
+        [HttpPost("Post_Registar_datos_de_Una_Reservacion/")]
+        public ActionResult<Boolean> Post_Registrar_Una_Reservacion([FromBody] Reservacion datos_de_la_reservacion)
         {
             Boolean confirmacion;
 
@@ -21,7 +21,7 @@ namespace Api.Controllers
 
             Reservacion datos_da_la_reservacion = new Reservacion();
 
-            datos_da_la_reservacion = datos_de_la_reservacion_nuevos;
+            datos_da_la_reservacion = datos_de_la_reservacion;
 
             datos_de_conexion.usuario = "admin";
             datos_de_conexion.constraseña = "admin";
@@ -32,7 +32,10 @@ namespace Api.Controllers
 
         }
 
-        //Esctura get para traer datos de un cliente
+
+        /*
+
+        //Esctura get para traer datos de un solo usuario
         [HttpGet("Get_Reservaciones_de_un_cliente/{codigo}")]
         public ActionResult<string> Get_Datos_de_un_Usuario([FromRoute] string codigo)
         {
@@ -52,26 +55,6 @@ namespace Api.Controllers
             datos_de_conexion.constraseña = "admin";
 
             Lista_de_reservaciones = logica_De_Los_Usuarios.todas_las_reservaciones(datos_de_conexion, datos_de_la_reservacion);
-
-            string mensaje = JsonConvert.SerializeObject(Lista_de_reservaciones);
-
-            return (mensaje);
-
-        }
-
-        //Esctura get para traer datos de un cliente
-        [HttpGet("Get_Detalles_de_un_Reservaciones_de_un_cliente/{codigo}")]
-        public ActionResult<string> Get_Detalles_de_un_Reservaciones_de_un_cliente([FromRoute] string codigo)
-        {
-
-            DataTable Lista_de_reservaciones = new DataTable();
-
-            Datos_login datos_de_conexion = new Datos_login();
-
-            datos_de_conexion.usuario = "admin";
-            datos_de_conexion.constraseña = "admin";
-
-            Lista_de_reservaciones = logica_De_Los_Usuarios.detalles_de_una_reservacion(datos_de_conexion, codigo);
 
             string mensaje = JsonConvert.SerializeObject(Lista_de_reservaciones);
 
@@ -148,32 +131,32 @@ namespace Api.Controllers
             datos_de_conexion.constraseña = "admin";
 
             confimacion = logica_De_Los_Usuarios.eliminar_reservacion(datos_de_conexion, datos_de_la_reservacion);
-            s
+
             return (confimacion);
 
+        }
 
-            /*
-            //Esctura get para traer todos los usuario
-            [HttpGet("Get_Traer_Todos_los_Usuario/")]
-            public ActionResult<string> Get_Traer_Todos_los_Usuario()
-            {
-                DataTable lista_de_usuario = new DataTable();
+        //Esctura get para traer todos los usuario
+        [HttpGet("Get_Traer_Todos_los_Usuario/")]
+        public ActionResult<string> Get_Traer_Todos_los_Usuario()
+        {
+            DataTable lista_de_usuario = new DataTable();
 
-                Datos_login datos_de_conexion = new Datos_login();
+            Datos_login datos_de_conexion = new Datos_login();
 
-                datos_de_conexion.usuario = "admin";
-                datos_de_conexion.constraseña = "admin";
+            datos_de_conexion.usuario = "admin";
+            datos_de_conexion.constraseña = "admin";
 
-                lista_de_usuario = logica_De_Los_Servicios_de_una_empresa.consultar_todo_los_usuarios(datos_de_conexion);
+            lista_de_usuario = logica_De_Los_Servicios_de_una_empresa.consultar_todo_los_usuarios(datos_de_conexion);
 
-                string mensaje = JsonConvert.SerializeObject(lista_de_usuario);
+            string mensaje = JsonConvert.SerializeObject(lista_de_usuario);
 
-                return (mensaje);
-
-            }
-
-            */
+            return (mensaje);
 
         }
+
+        */
+
+
     }
 }

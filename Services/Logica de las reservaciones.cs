@@ -40,6 +40,17 @@ namespace Services
 
         }
 
+        //Funcion para traer el detlla de una reservacion
+        public DataTable detalles_de_una_reservacion(Datos_login datos_de_conexion, string codigo)
+        {
+            DataTable lista_de_reservaciones;
+
+            lista_de_reservaciones = funciones_De_La_Reservacion.consultar_detalles_de_una_reservacion(datos_de_conexion, codigo);
+
+            return lista_de_reservaciones;
+
+        }
+
         //Funcion para traer todas las reservaciones
         public DataTable todas_las_reservaciones_de_una_empresa(Datos_login datos_de_conexion, Reservacion datos_de_una_reservacion)
         {
