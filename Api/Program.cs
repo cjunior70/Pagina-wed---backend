@@ -1,5 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurar servicio CORS con política que permita el frontend React
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // URL de tu React
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -17,6 +28,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Aplicar la política CORS
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
